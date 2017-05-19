@@ -539,11 +539,11 @@ Activates/deactivates stdout information of multiple shooting method.
 ```
 WATCH_LAPLACE_FITTING 1
 ```
-Activates/deactivates stdout information of reference newton regression.
+Activates/deactivates stdout information of reference Newton regression.
 ```
 WATCH_HOOKE_FITTING 1
 ```
-Activates/deactivates stdout information of elastic newton regression.
+Activates/deactivates stdout information of elastic Newton regression.
 ```
 WATCH_QR_DECOMPOSITION 0
 ```
