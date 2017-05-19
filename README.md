@@ -171,7 +171,7 @@ OpenCapsule -s
 ```
 This command triggers the Hookean shape analysis 
 and will automatically use the specified reference 
-shapes. _This sets OpenCapsule apart from
+shapes. _This Hookean shape analysis sets OpenCapsule apart from
 available commercial software packages._
 You can also provide initial values by using the call
 ```
