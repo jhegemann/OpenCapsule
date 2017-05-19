@@ -183,3 +183,6 @@ tension and the inverse capillary diameter. Only
 if the simple call without initial values gives 
 no adequate result, you should provide intitial 
 values for the fit parameters. 
+
+## Generated Output
+The essential results are saved to the GLOBAL_OUT_FOLDER. Most interesting are the summarized results written to the files "reference.dat" and "sequence.dat". Moreover a lot of miscellaneous output is generated including the determined shapes, extracted contours, binary images and general image information, i.e. quantities measured from the binary image. The most instructive output is the input image with the determined shape and wrinkle domain overlayed. From these images you can immediately judge if the analysis was successful. With GNUPLOT_SUPPORT activated you also get all relevant plots as *.eps files. Don't worry about the large number of output files. They are named intuitively and self explanatory. The file "report.html" merges a lot of information into a single file, including all determined values in SI units and images with shapes overlayed.
