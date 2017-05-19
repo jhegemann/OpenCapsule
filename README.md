@@ -93,6 +93,9 @@ meet several requirements, which are given in the following.
 * The camera should not be moved during recording of the sequence.
 * Inner and outer capillary diameter should differ significantly.
 
+If you are not sure what your images should look like,
+take a look at the publications listed above.
+
 ## Getting Started
 
 To give an impression of the typical command line 
@@ -118,15 +121,15 @@ up correctly, OpenCapsule gives you some general
 information about itself. Additionally, all 
 necessary directories and a standard configuration 
 file are created. Please edit the configuration 
-file "config/config.cfg" before you proceed. 
+file `./config/config.cfg` before you proceed. 
 List your input files, which should placed 
-(by default) in the "input" folder just created, 
-under REFERENCE_SHAPE and ELASTIC_SHAPE. 
+(by default) in the `./input/` folder just created, 
+under `REFERENCE_SHAPE` and `ELASTIC_SHAPE`. 
 OpenCapsule averages over reference images, 
 which should all show the same, undeformed 
 state of the capsule. Make sure you have 
-specified the fields EXPERIMENT_CAPDIAMETER 
-and EXPERIMENT_DENSITY in SI units. If you 
+specified the fields `EXPERIMENT_CAPDIAMETER`
+and `EXPERIMENT_DENSITY` in SI units. If you 
 are not sure how to handle the configuration 
 file, see the corresponding section for 
 more details about this. Next, typing
@@ -136,9 +139,9 @@ OpenCapsule -h
 will give you an overview over the command line 
 options as well as a list of common examples. 
 The results of the following standard commands 
-are placed in the "global_out" folder, where 
+are placed in the `./global_out/` folder, where 
 you will find the results listed in plain 
-*.txt files, images in *.png format, and 
+`*.txt` files, images in `*.png` format, and 
 wrapped in a comprehensive html-report. 
 
 ### Edge Detection
@@ -147,7 +150,8 @@ wrapped in a comprehensive html-report.
 OpenCapsule -i [path to image]
 ```
 This command performs an isolated image analysis 
-of the image specified by the option --image. 
+of the image specified by the relative 
+path `./path-to-image/`. 
 If your image processing fails or results are 
 obviously bad, you can adapt OpenCapsule to your 
 specific images. Try to tune the related values 
@@ -186,9 +190,9 @@ values for the fit parameters.
 
 ## Generated Output
 The essential results are saved to the 
-GLOBAL_OUT_FOLDER. Most interesting are the 
+`GLOBAL_OUT_FOLDER`. Most interesting are the 
 summarized results written to the files 
-"reference.dat" and "sequence.dat". Moreover 
+`reference.dat` and `sequence.dat`. Moreover 
 a lot of miscellaneous output is generated 
 including the determined shapes, extracted 
 contours, binary images and general image 
@@ -197,12 +201,12 @@ the binary image. The most instructive output
 is the input image with the determined shape 
 and wrinkle domain overlayed. From these 
 images you can immediately judge if the 
-analysis was successful. With GNUPLOT_SUPPORT 
+analysis was successful. With `GNUPLOT_SUPPORT` 
 activated you also get all relevant plots 
-as *.eps files. Don't worry about the large 
+as `*.eps` files. Don't worry about the large 
 number of output files. They are named 
 intuitively and self explanatory. The file 
-"report.html" merges a lot of information 
+`report.html` merges a lot of information 
 into a single file, including all determined 
 values in SI units and images with shapes overlayed.
 
@@ -227,15 +231,15 @@ software. For details see the original GPLv3 license.
 ### OpenCapsule does not detect a closed contour...
 
 Most probably it helps to increase the variable 
-GAUSSIAN_SIGMA in 1.0 steps to smooth the image. 
+`GAUSSIAN_SIGMA` in 1.0 steps to smooth the image. 
 Edge detection strongly depends on the contrast 
 and brightness of your image. Sometimes it helps 
-to adjust the thresholds T_LOW and T_HIGH for 
+to adjust the thresholds `T_HIGH` and `T_LOW` for 
 the hysteresis alogrithm performed as the last 
 step of edge detection. Try some other (probably higher) 
-values most preferable at ratios T_HIGH/T_LOW = 3:1, 2:1 
+values most preferable at ratios 3:1, 2:1 
 or something similar. You can switch off the option 
-CHECK_IF_CLOSED, but this is not recommended. Note 
+`CHECK_IF_CLOSED`, but this is not recommended. Note 
 that both thresholds are in the range between zero 
 and one. Very small values force the edge detection 
 to be very sensitive whereas values close to one 
@@ -243,12 +247,12 @@ will find only very few contour points.
 
 ### Some of the numerical algorithms don't converge...
 
-First, turn on the corresponding WATCH_XXX variable 
+First, turn on the corresponding `WATCH_XXX` variable 
 to get an impression of what happens. Then, carefully 
 tune the corresponding numerical thresholds, e.g. 
-lower the required accuracies EPS_XXX. Also think 
+lower the required accuracies `EPS_XXX`. Also think 
 about tuning your initial values and make sure 
-NELDERMEAD_PREFITTING is enabled.
+`NELDERMEAD_PREFITTING` is enabled.
 
 ### OpenCapsule simply aborts before doing anything...
 
@@ -272,7 +276,7 @@ This would help to classify materials based on their elastic properties.
 
 ## Configuration File
 All settings are controlled by the configuration 
-file ./config/config.cfg relative to the current 
+file `./config/config.cfg` relative to the current 
 working directory. Settings can be divided in 
 several major classes, which are explained 
 in the following. NOTE: only the sections 
@@ -320,7 +324,7 @@ EXPERIMENT_CAPDIAMETER (0.0005 .. 0.002)
 Outer diameter of the used needle in m.
 
 ### 3) Numerical thresholds/constants
-Normally, OpenCapsule should run smoothly with it's default 
+Normally, OpenCapsule should run smoothly with its default 
 values. However, to achieve convergence of the fitting 
 or shooting algorithms, it can be necessary 
 (in some rare cases) to adapt the numerics to your 
@@ -445,7 +449,7 @@ reference state, elastic states then use the
 same position. this option is useful if capsule 
 shapes occur, which are parallel to the needle 
 at the capsule mounting point. You can keep 
-FIX_CHARACTERISTICS activated if you are sure 
+`FIX_CHARACTERISTICS` activated if you are sure 
 that the camera or the needle does not move 
 during the whole video.
 
@@ -453,14 +457,14 @@ during the whole video.
 
 These switches can be set to 1 (active) and 0 (inactive) 
 and are used to control program flow. For example you can 
-activate Nelder-Mead prefitting (recommended if you can 
+activate `NELDERMEAD_PREFITTING` (recommended if you can 
 only roughly imagine your initial values for elastic 
 moduli and pressure). If you have measured for example 
 the pressure or know poisson's ratio you can switch of 
 the regression of these specific parameters. Note that 
 this is a constraint and will probably lead to higher 
 fit errors. In case of only weakly deflated capsules 
-you can deactivate EXTENDED_SHOOTING to improve speed of the algorithm.
+you can deactivate `EXTENDED_SHOOTING` to improve speed of the algorithm.
 
 ```
 FIT_PRESSURE 1
