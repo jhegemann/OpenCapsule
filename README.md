@@ -185,25 +185,124 @@ no adequate result, you should provide intitial
 values for the fit parameters. 
 
 ## Generated Output
-The essential results are saved to the GLOBAL_OUT_FOLDER. Most interesting are the summarized results written to the files "reference.dat" and "sequence.dat". Moreover a lot of miscellaneous output is generated including the determined shapes, extracted contours, binary images and general image information, i.e. quantities measured from the binary image. The most instructive output is the input image with the determined shape and wrinkle domain overlayed. From these images you can immediately judge if the analysis was successful. With GNUPLOT_SUPPORT activated you also get all relevant plots as *.eps files. Don't worry about the large number of output files. They are named intuitively and self explanatory. The file "report.html" merges a lot of information into a single file, including all determined values in SI units and images with shapes overlayed.
+The essential results are saved to the 
+GLOBAL_OUT_FOLDER. Most interesting are the 
+summarized results written to the files 
+"reference.dat" and "sequence.dat". Moreover 
+a lot of miscellaneous output is generated 
+including the determined shapes, extracted 
+contours, binary images and general image 
+information, i.e. quantities measured from 
+the binary image. The most instructive output 
+is the input image with the determined shape 
+and wrinkle domain overlayed. From these 
+images you can immediately judge if the 
+analysis was successful. With GNUPLOT_SUPPORT 
+activated you also get all relevant plots 
+as *.eps files. Don't worry about the large 
+number of output files. They are named 
+intuitively and self explanatory. The file 
+"report.html" merges a lot of information 
+into a single file, including all determined 
+values in SI units and images with shapes overlayed.
 
 ## License
-OpenCapsule is GPLv3 licensed and thereby 100% Open Source Software. Feel free to use it in-house in your research department or company. Feel free to improve or adapt OpenCapsule, but notice that the resulting code has to be GPLv3 licensed, too. You are NOT allowed to include the OpenCapsule code or a derivate in proprietary or closed source applications. You are also NOT allowed to compile OpenCapsule into a library and link your proprietary or closed source software against this library. However, it is legitimate to access the OpenCapsule binary (as a black box) from your proprietary software. For details see the original GPLv3 license. 
+OpenCapsule is GPLv3 licensed and thereby 100% 
+Open Source Software. Feel free to use it 
+in-house in your research department or company. 
+Feel free to improve or adapt OpenCapsule, 
+but notice that the resulting code has to be 
+GPLv3 licensed, too. You are NOT allowed to 
+include the OpenCapsule code or a derivate in 
+proprietary or closed source applications. 
+You are also NOT allowed to compile OpenCapsule 
+into a library and link your proprietary or 
+closed source software against this library. 
+However, it is legitimate to access the OpenCapsule 
+binary (as a black box) from your proprietary 
+software. For details see the original GPLv3 license. 
+
+## Frequent Issues
+
+### OpenCapsule does not detect a closed contour...
+
+Most probably it helps to increase the variable 
+GAUSSIAN_SIGMA in 1.0 steps to smooth the image. 
+Edge detection strongly depends on the contrast 
+and brightness of your image. Sometimes it helps 
+to adjust the thresholds T_LOW and T_HIGH for 
+the hysteresis alogrithm performed as the last 
+step of edge detection. Try some other (probably higher) 
+values most preferable at ratios T_HIGH/T_LOW = 3:1, 2:1 
+or something similar. You can switch off the option 
+CHECK_IF_CLOSED, but this is not recommended. Note 
+that both thresholds are in the range between zero 
+and one. Very small values force the edge detection 
+to be very sensitive whereas values close to one 
+will find only very few contour points.
+
+### Some of the numerical algorithms don't converge...
+
+First, turn on the corresponding WATCH_XXX variable 
+to get an impression of what happens. Then, carefully 
+tune the corresponding numerical thresholds, e.g. 
+lower the required accuracies EPS_XXX. Also think 
+about tuning your initial values and make sure 
+NELDERMEAD_PREFITTING is enabled.
+
+### OpenCapsule simply aborts before doing anything...
+
+This is probably an issue of your selected paths 
+or input files. Make sure all filenames are valid 
+and backed by a real file. Check if your 
+configuration file contains all necessary values. 
+Consider a rollback to the standard configuration file.
+
+## Upcoming Changes
+In addition to hookean elasticity, we plan to implement 
+more elastic material laws, such as Mooney-Rivlin 
+elasticity. This could help to decide which material 
+law fits best for a specific capsule type. We also 
+aim to implement extensions in order to include 
+viscoelastic effects. Having analyzed plenty of materials 
+in the future, it would be useful to have a large
+database collecting all the different materials/capsules 
+similar to already existing protein- or gen-databases.
+This would help to classify materials based on their elastic properties. 
 
 ## Configuration File
-All settings are controlled by the configuration file ./config/config.cfg relative to the current working directory. Settings can be divided in several major classes, which are explained in the following. NOTE: only the sections 1)+2) and maybe 4)+5) are important for the average user. These sections are marked as "user-space". Sections, which must not be left unspecified are marked as "mandatory". Values given behind the properties are standard values. Reasonable ranges are given in bracktes.
+All settings are controlled by the configuration 
+file ./config/config.cfg relative to the current 
+working directory. Settings can be divided in 
+several major classes, which are explained 
+in the following. NOTE: only the sections 
+*1)*+*2)* and maybe *4)*+*5)* are important 
+for the average user. These sections are marked 
+as "user-space". Sections, which must not be left 
+unspecified are marked as "mandatory". Values 
+given behind the properties are standard values. 
+Reasonable ranges are given in bracktes.
 
 ### 1) Input files (user-space, mandatory)
 
-Put the file names of your input images in a list seperated by colons. For the undeformed reference shapes give as many (similar) images as possible, because OpenCapsule will average over all these images. No specific ordering is required for the reference shapes. For the deformed (deflated) shapes make sure they are ordered chronologically, such that parameters can be traced and convergence will be more stable and faster. If some deflated shapes are very close or similar to the reference shape, please discard them.
+Put the file names of your input images in a list 
+seperated by colons. For the undeformed reference 
+shapes give as many (similar) images as possible, 
+because OpenCapsule will average over all these images. 
+No specific ordering is required for the reference 
+shapes. For the deformed (deflated) shapes make sure 
+they are ordered chronologically, such that parameters 
+can be traced and convergence will be more stable 
+and faster. If some deflated shapes are very close 
+or similar to the reference shape, please discard them.
 ```
 REFERENCE_SHAPE reference1.png;reference2.png
 ```
-unordered list of files (in input-folder) for reference images separated by colons.
+Unordered list of files (in input-folder) for reference images separated by colons.
 ```
 ELASTIC_SHAPE elastic1.png;elastic2.png;elastic3.png;elastic4.png
 ```
-(chronlogically ordered) list of files (in input-folder) for elastic images separated by colons.
+(Chronlogically ordered) list of files (in input-folder) for elastic images separated by colons.
 
 ### 2) Experimental quantities (user-space, mandatory)
 
@@ -214,11 +313,11 @@ difference between inner and outer phase in kg/m^3.
 ```
 EXPERIMENT_DENSITY (100.0 .. 900.0)
 ```
-density difference between inner and outer phase in kg/m^3.
+Density difference between inner and outer phase in kg/m^3.
 ```
 EXPERIMENT_CAPDIAMETER (0.0005 .. 0.002)
 ```
-outer diameter of the used needle in m.
+Outer diameter of the used needle in m.
 
 ### 3) Numerical thresholds/constants
 Normally, OpenCapsule should run smoothly with it's default 
@@ -233,7 +332,7 @@ and small changes can dramatically change the behaviour of the algorithms.
 ```
 EPS_RMS 1e-16 (1.0e-16 .. 1.0e-12)
 ```
-maximum arc-length deviation in bisection used 
+Maximum arc-length deviation in bisection used 
 to determine shortest distance between contour points and shape.
 ```
 EPS_NEWTON_LAPLACE 1e-6, EPS_NEWTON_HOOKE 1e-6 (1.0e-8 .. 1.0e-3)
@@ -243,46 +342,46 @@ equations stops if euclidian norm of parameter update falls below this threshold
 ```
 EPS_SINGLE_SHOOTING 1e-6 (1.0e-8 .. 1.0e-4)
 ```
-shooting method used to solve elastic equations 
+Shooting method used to solve elastic equations 
 stops if deviation to boundary falls below 
-this threshold. deviation of 0.01 corresponds to 1%.
+this threshold. Deviation of 0.01 corresponds to 1%.
 ```
 EPS_MULTI_SHOOTING 1e-6 (1.0e-8 .. 1.0e-4)
 ```
-shooting method used to improve single shooting 
+Shooting method used to improve single shooting 
 stops if euclidian norm of residual falls 
-below this threshold. residual aggregates 
+below this threshold. Residual aggregates 
 all distance vectors between individual segments of solution.
 ```
 DX_FIT 1e-6 (1.0e-8 .. 1.0e-4)
 ```
-interval width used to determine numerical 
+Interval width used to determine numerical 
 derivatives during regression, i.e. 
 change of shape with parameters (moduli, pressure, ..).
 ```
 DX_SHOOTING 1e-6 (1.0e-8 .. 1.0e-4)
 ```
-interval width used to determine numerical 
+Interval width used to determine numerical 
 derivatives in multiple shooting method, 
 i.e., change of segment end-points with initial values.
 ```
 INTEGRATION_STEP_LAPLACE 1e-4 (1.0e-4 .. 1.0e-3)
 ```
-step width of RK4 method to solve reference equations.
+Step width of RK4 method to solve reference equations.
 ```
 INTEGRATION_STEP_HOOKE 1e-4 (1.0e-4 .. 1.0e-3)
 ```
-step width of RK4 method to solve elastic equations.
+Step width of RK4 method to solve elastic equations.
 ```
 EPS_IMPLICIT_RK 1e-10
 ```
-implicit RK4 integration used to solve elastic 
+Implicit RK4 integration used to solve elastic 
 equations stops if euclidian norm of 
 slope update falls below this threshold.
 ```
 IMPLICIT_INTEGRATION 0
 ```
-activate/deactivate implicit RK4 integration
+Activate/deactivate implicit RK4 integration
 (obsolete, slow, introduced for testing of stability).
 ```
 EPS_NELDER_MEAD 1e-4
@@ -295,13 +394,13 @@ If your image processing fails, you might want to tune some of the following val
 ```
 SCALE_IMAGE 1e-2
 ```
-extracted contour points from image are simply 
+Extracted contour points from image are simply 
 multiplied by this value to do some prescaling 
 before fitting reference shapes.
 ```
 T_LOW 0.3, T_HIGH 0.6 (0.0 .. 1.0)
 ```
-lower and higher threshold of hysteresis 
+Lower and higher threshold of hysteresis 
 algorithm performed as last step of edge 
 detection. you can safely use higher values, 
 OpenCapsule will automatically lower 
@@ -309,39 +408,39 @@ the thresholds if no closed contour is found.
 ```
 GAUSSIAN_SIGMA 1.0 (1.0 .. 10.0)
 ```
-width of gaussian smoothing image before edge detection.
+Width of gaussian smoothing image before edge detection.
 ```
 R_MIN 1, R_MAX 5 (1 .. 10)
 ```
-minimum and maximum radius of applied 
+Minimum and maximum radius of applied 
 gaussian filters (OpenCapsule averages 
 over binary images resulting from 
 smoothing with differently sized gaussians).
 ```
 THRESHOLD_CAPILLARY 5 (1 .. 20)
 ```
-used for tracing outer capillary from upper 
+Used for tracing outer capillary from upper 
 image border to inner capillary. searching 
 terminates if contour pixel deviates more 
 than this threshold from average horizontal position.
 ```
 TOP_BUFFER 1 (0 .. 20)
 ```
-vertical distance from detected capillary 
+Vertical distance from detected capillary 
 height to nearest contour point (necessary 
 because of possible surfactant/polymer 
 sediments at the inner capillary).
 ```
 CHECK_IF_CLOSED 1
 ```
-activates/deactivate check for closed 
+Activates/deactivate check for closed 
 contour in binary image (keep activated if possible, 
 deactivation will skip abortion if 
 contour not closed, behaviour will be undefined).
 ```
 FIX_CHARACTERISTICS 1
 ```
-capillary position will be detected only from 
+Capillary position will be detected only from 
 reference state, elastic states then use the 
 same position. this option is useful if capsule 
 shapes occur, which are parallel to the needle 
@@ -352,66 +451,75 @@ during the whole video.
 
 ### 5) Functional switches/features (user-space)
 
-These switches can be set to 1 (active) and 0 (inactive) and are used to control program flow. For example you can activate Nelder-Mead prefitting (recommended if you can only roughly imagine your initial values for elastic moduli and pressure). If you have measured for example the pressure or know poisson's ratio you can switch of the regression of these specific parameters. Note that this is a constraint and will probably lead to higher fit errors. In case of only weakly deflated capsules you can deactivate EXTENDED_SHOOTING to improve speed of the algorithm.
+These switches can be set to 1 (active) and 0 (inactive) 
+and are used to control program flow. For example you can 
+activate Nelder-Mead prefitting (recommended if you can 
+only roughly imagine your initial values for elastic 
+moduli and pressure). If you have measured for example 
+the pressure or know poisson's ratio you can switch of 
+the regression of these specific parameters. Note that 
+this is a constraint and will probably lead to higher 
+fit errors. In case of only weakly deflated capsules 
+you can deactivate EXTENDED_SHOOTING to improve speed of the algorithm.
 
 ```
 FIT_PRESSURE 1
 ```
-sets pressure as free parameter of the regression.
+Sets pressure as free parameter of the regression.
 ```
 FIT_POISSON 1
 ```
-sets poisson ratio as free parameter of the regression.
+Sets poisson ratio as free parameter of the regression.
 ```
 FIT_COMPRESSION 1
 ```
-sets area compression modulus as free parameter of the regression.
+Sets area compression modulus as free parameter of the regression.
 ```
 EXTENDED_SHOOTING 1
 ```
-activates/deactivates multiple shooting method used to improve solution of single shooting method.
+Activates/deactivates multiple shooting method used to improve solution of single shooting method.
 ```
 FORCE_SYMMETRY 0 (experimental)
 ```
-activates/deactivates rotation of contour points to align them to symmetry axis.
+Activates/deactivates rotation of contour points to align them to symmetry axis.
 ```
 FORCE_BOUNDARY_SYMMETRY 1
 ```
-activates/deactivates symmetric aligning of two the contour points associated with capillary.
+Activates/deactivates symmetric aligning of two the contour points associated with capillary.
 ```
 NELDERMEAD_PREFITTING 0
 ```
-activates/deactivates nelder-mead regression before newton regression.
+Activates/deactivates nelder-mead regression before newton regression.
 ```
 PARAMETER_TRACING 1
 ```
-actiates/deactivates use of fit result in next image as initial values.
+Actiates/deactivates use of fit result in next image as initial values.
 ```
 WRINKLING_WAVELENGTH 0.0
 ```
-specifies a manually measured wrinkle wavelength in units of pixels.
+Specifies a manually measured wrinkle wavelength in units of pixels.
 
 ### 6) General directories
 ```
 INPUT_FOLDER ./input/
 ```
-specifies folder, from which images are read.
+Specifies folder, from which images are read.
 ```
 CONFIG_FOLDER ./config/
 ```
-specifies folder, in which configuration file is placed.
+Specifies folder, in which configuration file is placed.
 ```
 OUT_FOLDER ./out/
 ```
-specifies folder for miscellaneous output files.
+Specifies folder for miscellaneous output files.
 ```
 GLOBAL_OUT_FOLDER ./global_out/
 ```
-specifies folder for final output provided to user.
+Specifies folder for final output provided to user.
 ```
 TMP_FOLDER ./tmp/
 ```
-specifies folder, in which automatically generated gnuplot scripts are placed.
+Specifies folder, in which automatically generated gnuplot scripts are placed.
 
 ### 7) Debugging:
 
@@ -419,24 +527,24 @@ These switches are very useful for debugging purposes. If something goes serious
 ```
 WATCH_SINGLE_SHOOTING 0
 ```
-activates/deactivates stdout information of single shooting method.
+Activates/deactivates stdout information of single shooting method.
 ```
 WATCH_MULTI_SHOOTING 0
 ```
-activates/deactivates stdout information of multiple shooting method.
+Activates/deactivates stdout information of multiple shooting method.
 ```
 WATCH_LAPLACE_FITTING 1
 ```
-activates/deactivates stdout information of reference newton regression.
+Activates/deactivates stdout information of reference newton regression.
 ```
 WATCH_HOOKE_FITTING 1
 ```
-activates/deactivates stdout information of elastic newton regression.
+Activates/deactivates stdout information of elastic newton regression.
 ```
 WATCH_QR_DECOMPOSITION 0
 ```
-activates/deactivates stdout information of QR-decomposition.
+Activates/deactivates stdout information of QR-decomposition.
 ```
 WATCH_NELDER_MEAD 1
 ```
-activates/deactivates stdout information of elastic nelder-mead regression.
+Activates/deactivates stdout information of elastic nelder-mead regression.
