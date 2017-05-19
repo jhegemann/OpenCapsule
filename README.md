@@ -1,11 +1,11 @@
-#OpenCapsule - Pendant Capsule Elastometry
+# OpenCapsule - Pendant Capsule Elastometry
 C/C++ Software / Command Line Interface / Linux  
 Developed at TU Dortmund University  
 Author: Jonas Hegemann, (jonas.hegemann@tu-dortmund.de)  
 Framework: Sebastian Knoche (sebastian.knoche@tu-dortmund.de)  
 Supervisor: Jan Kierfeld (jan.kierfeld@tu-dortmund.de)  
 
-##Description:
+## Description:
 We provide a C/C++ software for the shape analysis of 
 deflated elastic capsules in a pendant capsule geometry, 
 which is based on the proper elastic description of the 
