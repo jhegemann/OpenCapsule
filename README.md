@@ -165,13 +165,13 @@ OpenCapsule -r
 This command triggers the standard Laplace-Young analysis. 
 No initial values have to be specified. 
 
-### Elastic Analysis
+### Elastic/Hookean Analysis
 ```
 OpenCapsule -s
 ```
 This command triggers the Hookean shape analysis 
 and will automatically use the specified reference 
-shapes. _This is what sets OpenCapsule apart from
+shapes. _This sets OpenCapsule apart from
 available commercial software packages._
 You can also provide initial values by using the call
 ```
