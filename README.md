@@ -46,7 +46,7 @@ available under the GPL license.
 
 ## Installation Guide
 
-OpenCapsule was tested (successful compiling and running) on 
+OpenCapsule was tested (successful compilation and execution) on 
 Ubuntu 16.04 LTS and Scientific Linux 6.6 with GNU/GCC compiler. 
 To install OpenCapsule first download the tarball and extract 
 it to some arbitrary direction or simply clone the repository. 
