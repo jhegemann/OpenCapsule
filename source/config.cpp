@@ -186,6 +186,7 @@ void parse_configuration()
         if (contains(fs, "GNUPLOT_SUPPORT")) GNUPLOT_SUPPORT = (bool)atoi(fs["GNUPLOT_SUPPORT"].c_str());
         if (contains(fs, "PARAMETER_TRACING")) PARAMETER_TRACING = (bool)atoi(fs["PARAMETER_TRACING"].c_str());
         if (contains(fs, "GAMMA_SCALE")) GAMMA_SCALE = atof(fs["GAMMA_SCALE"].c_str());
+        if (contains(fs, "WRINKLING_WAVELENGTH")) WRINKLING_WAVELENGTH = atof(fs["WRINKLING_WAVELENGTH"].c_str());
         
         if (!contains(fs, "EXPERIMENT_DENSITY"))
         {
