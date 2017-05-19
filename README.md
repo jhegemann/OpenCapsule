@@ -1,7 +1,7 @@
 # OpenCapsule - Pendant Capsule Elastometry
 C/C++ Software / Command Line Interface / Linux  
 Developed at TU Dortmund University  
-Author: Jonas Hegemann, (jonas.hegemann@tu-dortmund.de)  
+Author: Jonas Hegemann (jonas.hegemann@tu-dortmund.de)  
 Framework: Sebastian Knoche (sebastian.knoche@tu-dortmund.de)  
 Supervisor: Jan Kierfeld (jan.kierfeld@tu-dortmund.de)  
 
