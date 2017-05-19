@@ -259,7 +259,7 @@ configuration file contains all necessary values.
 Consider a rollback to the standard configuration file.
 
 ## Upcoming Changes
-In addition to hookean elasticity, we plan to implement 
+In addition to Hookean elasticity, we plan to implement 
 more elastic material laws, such as Mooney-Rivlin 
 elasticity. This could help to decide which material 
 law fits best for a specific capsule type. We also 
