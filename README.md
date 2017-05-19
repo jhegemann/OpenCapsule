@@ -33,3 +33,13 @@ can be derived. We verified the method by analyzing
 several materials and comparing the results to available 
 rheological measurements. We make the software 
 available under the GPL license. 
+
+## Publications
+
+* Pendant capsule elastometry  
+  J. Hegemann, S. Knoche, S. Egger, H. Rehage, and J. Kierfeld  
+  Journal of Colloid and Interface Science, ... to be published
+
+* Elastometry of deflated capsules: Elastic moduli from shape and wrinkle analysis  
+  S. Knoche, D. Vella, E. Aumaitre, P. Degen, H. Rehage, P. Cicuta, and J. Kierfeld  
+  Langmuir, Vol. 29, No. 40, Pages 12463--12471, 2013, ACS Publications
