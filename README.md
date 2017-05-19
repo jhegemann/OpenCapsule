@@ -151,7 +151,7 @@ OpenCapsule -i [path to image]
 ```
 This command performs an isolated image analysis 
 of the image specified by the relative 
-path `./path-to-image/`. 
+path `./path-to-image/image.png`. 
 If your image processing fails or results are 
 obviously bad, you can adapt OpenCapsule to your 
 specific images. Try to tune the related values 
@@ -280,7 +280,7 @@ file `./config/config.cfg` relative to the current
 working directory. Settings can be divided in 
 several major classes, which are explained 
 in the following. NOTE: only the sections 
-*1)*+*2)* and maybe *4)*+*5)* are important 
+**1)**+**2)** and maybe **4)**+**5)** are important 
 for the average user. These sections are marked 
 as "user-space". Sections, which must not be left 
 unspecified are marked as "mandatory". Values 
@@ -551,4 +551,4 @@ Activates/deactivates stdout information of QR-decomposition.
 ```
 WATCH_NELDER_MEAD 1
 ```
-Activates/deactivates stdout information of elastic nelder-mead regression.
+Activates/deactivates stdout information of elastic Nelder-Mead regression.
