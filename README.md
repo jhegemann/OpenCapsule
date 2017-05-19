@@ -495,7 +495,7 @@ NELDERMEAD_PREFITTING 0
 ```
 Activates/deactivates nelder-mead regression before newton regression.
 ```
-PARAMETER_TRACING 1
+PARAMETER_TRACING 0
 ```
 Actiates/deactivates use of fit result in next image as initial values.
 ```
