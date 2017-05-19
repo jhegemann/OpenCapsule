@@ -55,7 +55,7 @@ Boost, OpenCV and Gnu Scientific Library (GSL) e.g.
 on Ubuntu typing something like
 
 ```
-sudo apt-get install gcc g++ make libboost-all-dev libopencv-dev libgsl0-dev libgsl0ldbl
+sudo apt-get install gcc g++ make libboost-all-dev libopencv-dev libgsl-dev libgsl2
 ```
 
 in a login-shell will be sufficient. On Scientific Linux, 
