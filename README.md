@@ -43,3 +43,31 @@ available under the GPL license.
 * Elastometry of deflated capsules: Elastic moduli from shape and wrinkle analysis  
   S. Knoche, D. Vella, E. Aumaitre, P. Degen, H. Rehage, P. Cicuta, and J. Kierfeld  
   Langmuir, Vol. 29, No. 40, Pages 12463--12471, 2013, ACS Publications
+
+## Installation Guide
+
+OpenCapsule was tested (successful compiling and running) on 
+Ubuntu 16.04 LTS and Scientific Linux 6.6 with GNU/GCC compiler. 
+To install OpenCapsule first download the tarball and extract 
+it to some arbitrary direction or simply clone the repository. 
+Before compiling install the required dependencies
+Boost, OpenCV, Gnu Scientific Library (GSL) e.g. 
+on Ubuntu typing something like
+
+```
+sudo apt-get install gcc g++ make libboost-all-dev libopencv-dev libgsl0-dev libgsl0ldbl
+```
+
+in a login-shell will be sufficient. On Scientific Linux, i.e. Fedora system, use Yum package manager or install the libraries manually. OpenCapsule uses OpenCV for image handling and therefore only supports the image formats supported by your specific installation. Check if all PATH variables are set appropriately or adapt the Makefile by informing g++ explicitly where to find the libraries by using the -L option. Finally, simply type
+
+```
+make
+```
+
+to compile the project. If you like to set up a more usable working environment also type
+
+```
+make install
+```
+
+to make OpenCapsule accessible in all working directories.
