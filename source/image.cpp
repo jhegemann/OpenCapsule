@@ -510,7 +510,8 @@ double Image::WrinkleWavelength(HookeData *shape)
         FreeMatrix(binary);
         FreeMatrix(wrinkle_binary);
         avg_width /= (double)counter_width;
-        return avg_width/((double)N/Ne);
+        double rad = avg_width/2.0;
+        return M_PI*rad/((double)N/Ne);
 }
 
 /* use with ClosedContour
