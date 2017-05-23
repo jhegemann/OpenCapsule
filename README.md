@@ -36,7 +36,7 @@ available under the GPL license.
 
 ## Publications/Citation
 If you use OpenCapsule in your research department or
-company, and you publish data obtained with OpenCapsule,
+company and you publish data obtained with OpenCapsule,
 please cite the following articles!
 
 * Pendant capsule elastometry  
@@ -232,7 +232,7 @@ binary (as a black box) from your proprietary
 software. For details see the original GPLv3 license. 
 
 ## Example
-To check if OpenCapsule works on your machine,
+To check if OpenCapsule works on your machine
 we provide two (artificial)
 capsule images placed in the `test` folder. 
 Go to the `test` directory and call 
@@ -240,13 +240,13 @@ Go to the `test` directory and call
 ./OpenCapsule -s
 ```
 to analyze the test images.
-Your results are placed in the `global_out` folder.
-To compare them with the results provided by us type
+Your results will be placed in the `global_out` folder.
+To compare them with the results provided by us call
 ```
 diff global_out/reference.dat result/reference.dat
 diff global_out/sequence.dat result/sequence.dat
 ```
-in a login-shell. If the files are equal,
+If these files are equal,
 you can try to change some values in
 the configuration file or add some new variables.
 See below for details about the configuration file.
