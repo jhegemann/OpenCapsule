@@ -1,0 +1,6 @@
+REFERENCE_SHAPE                                         reference.png
+ELASTIC_SHAPE                                           deformed.png
+EXPERIMENT_DENSITY                                      140.0
+EXPERIMENT_CAPDIAMETER                                  0.001
+THRESHOLD_CAPILLARY                                     1
+GAUSSIAN_SIGMA                                          3.0

@@ -1,0 +1,11 @@
+               index          area [m^2]        volume [m^3]    pressure [N/m^2]    density [kg/m^3]         scaling [m]          error [px]       tension [N/m]
+                   0         1.34316e-05         6.35826e-09             15.8177                 140             0.00098             1.62342          0.00849703
+
+
+
+
+    pressure [N/m^2]    density [kg/m^3]      scaling-factor
+             15.8177                 140             174.809
+
+     surface tension          0.00849703N/m
+

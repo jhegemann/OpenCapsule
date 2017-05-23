@@ -361,7 +361,8 @@ void Sequence(LaplaceData *reference, double pressure, double poisson, double co
                 double avg_tau = 0.0;
                 double lambda = 0.0;
                 double bending_modulus = 0.0;
-                if (WrinklingRegion(&shape, s1, s2))
+                bool wrinkling_region;
+                if (wrinkling_region = WrinklingRegion(&shape, s1, s2))
                 {
                         cout << "Wrinkling analysis...\n" << endl;
                         wrinkling << setw(20) << i << setw(20) << Volume(&shape) / V0 << setw(20) << shape.L0 << setw(20) << s1 << setw(20) << s2 << flush << endl;
@@ -395,14 +396,25 @@ void Sequence(LaplaceData *reference, double pressure, double poisson, double co
                 << setw(12) << error 
                 << setw(12) << volume 
                 << setw(12) << area
-                << setw(12) << shape.GetEH0()*surface_tension
-                << setw(12) << wrinkle_length*length_scale
-                << setw(12) << avg_tau*surface_tension
-                << setw(12) << lambda*length_scale/reference->GetConversion()
-                << setw(12) << bending_modulus
-                << setw(12) << shape.GetEH0()*surface_tension*pow(MaximumRadius(&shape)*length_scale, 2)/bending_modulus
-                << setw(12) << sqrt(12.0*bending_modulus*(1.0-shape.GetPoisson())/(shape.GetEH0()*surface_tension))
-                << endl;
+                << setw(12) << shape.GetEH0()*surface_tension;
+                if (wrinkling_region) {
+                        sequence
+                        << setw(12) << wrinkle_length*length_scale
+                        << setw(12) << avg_tau*surface_tension
+                        << setw(12) << lambda*length_scale/reference->GetConversion()
+                        << setw(12) << bending_modulus
+                        << setw(12) << shape.GetEH0()*surface_tension*pow(MaximumRadius(&shape)*length_scale, 2)/bending_modulus
+                        << setw(12) << sqrt(12.0*bending_modulus*(1.0-shape.GetPoisson())/(shape.GetEH0()*surface_tension));
+                } else {
+                        sequence
+                        << setw(12) << 0
+                        << setw(12) << 0
+                        << setw(12) << 0
+                        << setw(12) << 0
+                        << setw(12) << 0
+                        << setw(12) << 0;
+                }
+                sequence << endl;
                 PlotHooke(filename.c_str(), &shape);
                 string out_image = GLOBAL_OUT_FOLDER + "final_elastic_" + to_string<int>(i) + ".png";
                 Image::WriteHooke(out_image, _elastic_image[i], &shape, reference->GetConversion());
@@ -419,13 +431,15 @@ void Sequence(LaplaceData *reference, double pressure, double poisson, double co
                 report << "<tr><td>relative surface</td><td>" << area << "</td></tr>" << endl;
                 report << "<tr><td>relative volume</td><td>" << volume << "</td></tr>" << endl;
                 report << "<tr><td>young's modulus</td><td>" << shape.GetEH0()*surface_tension << "N/m</td></tr>" << endl;
-                report << "<tr><td>wrinkle length</td><td>" << wrinkle_length*length_scale << "m</td></tr>" << endl;
-                report << "<tr><td>average meridional tension in wrinkled domain</td><td>" << avg_tau*surface_tension << "N/m</td></tr>" << endl;
-                report << "<tr><td>average wrinkle wavelength</td><td>" << lambda*length_scale/reference->GetConversion() << "m</td></tr>" << endl;
-                report << "<tr><td>bending modulus</td><td>" << bending_modulus << "Nm</td></tr>" << endl;
-                report << "<tr><td>f&oumlppl von karman number</td><td>" << shape.GetEH0()*surface_tension*pow(MaximumRadius(&shape)*length_scale, 2)/bending_modulus << "</td></tr>" << endl;
-                report << "<tr><td>thickness of layer</td><td>" << sqrt(12.0*bending_modulus*(1.0-shape.GetPoisson())/(shape.GetEH0()*surface_tension)) << "m</td></tr>" << endl;
-                report << "</table></td></table>" << endl;
+                if (wrinkling_region) {
+                        report << "<tr><td>wrinkle length</td><td>" << wrinkle_length*length_scale << "m</td></tr>" << endl;
+                        report << "<tr><td>average meridional tension in wrinkled domain</td><td>" << avg_tau*surface_tension << "N/m</td></tr>" << endl;
+                        report << "<tr><td>average wrinkle wavelength</td><td>" << lambda*length_scale/reference->GetConversion() << "m</td></tr>" << endl;
+                        report << "<tr><td>bending modulus</td><td>" << bending_modulus << "Nm</td></tr>" << endl;
+                        report << "<tr><td>f&oumlppl von karman number</td><td>" << shape.GetEH0()*surface_tension*pow(MaximumRadius(&shape)*length_scale, 2)/bending_modulus << "</td></tr>" << endl;
+                        report << "<tr><td>thickness of layer</td><td>" << sqrt(12.0*bending_modulus*(1.0-shape.GetPoisson())/(shape.GetEH0()*surface_tension)) << "m</td></tr>" << endl;
+                        report << "</table></td></table>" << endl;
+                }
         }
         
         wrinkling.close();
