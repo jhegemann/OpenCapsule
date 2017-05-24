@@ -40,7 +40,7 @@ company and you publish data obtained with OpenCapsule,
 please cite the following articles!
 
 * Pendant capsule elastometry  
-  J. Hegemann, S. Knoche, S. Egger, H. Rehage, and J. Kierfeld  
+  J. Hegemann, S. Knoche, S. Egger, M. Kott, S. Demand, A. Unverfehrt, H. Rehage, and J. Kierfeld  
   Journal of Colloid and Interface Science, ... to be published
 
 * Elastometry of deflated capsules: Elastic moduli from shape and wrinkle analysis  
