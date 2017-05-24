@@ -17,7 +17,7 @@ modulus from area-dependent measurements of the surface
 tension using pendant drop tensiometry, which can only 
 give a rough estimate of the elastic capsule properties 
 as they are based on a purely liquid interface model. 
-The software allows to determine the following quantities 
+The software allows the user to determine the following quantities 
 for each digitized image of a deflated capsule shape 
 given another image of its undeformed reference shape: 
 the surface tension characterizing the reference shape, 
@@ -27,7 +27,7 @@ available, these moduli can be determined as a function
 of the capsule volume to analyze viscoelastic effects 
 for different volume change rates and aging effects 
 depending on the deformation history. An additional 
-wrinkling wavelength measurement allows to determine 
+wrinkling wavelength measurement allows the user to determine 
 the bending modulus, from which the layer thickness 
 can be derived. We verified the method by analyzing 
 several materials and comparing the results to available 
