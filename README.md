@@ -217,19 +217,7 @@ values in SI units and images with shapes overlayed.
 
 ## License
 OpenCapsule is GPLv3 licensed and thereby 100% 
-Open Source Software. Feel free to use it 
-in-house in your research department or company. 
-Feel free to improve or adapt OpenCapsule, 
-but notice that the resulting code has to be 
-GPLv3 licensed, too. You are NOT allowed to 
-include the OpenCapsule code or a derivate in 
-proprietary or closed source applications. 
-You are also NOT allowed to compile OpenCapsule 
-into a library and link your proprietary or 
-closed source software against this library. 
-However, it is legitimate to access the OpenCapsule 
-binary (as a black box) from your proprietary 
-software. For details see the original GPLv3 license. 
+Open Source Software. See LICENSE for details.
 
 ## Example
 To check if OpenCapsule works on your machine
