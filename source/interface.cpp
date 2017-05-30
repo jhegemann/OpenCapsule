@@ -404,7 +404,7 @@ void Sequence(LaplaceData *reference, double pressure, double poisson, double co
                         << setw(12) << lambda*length_scale/reference->GetConversion()
                         << setw(12) << bending_modulus
                         << setw(12) << shape.GetEH0()*surface_tension*pow(MaximumRadius(&shape)*length_scale, 2)/bending_modulus
-                        << setw(12) << sqrt(12.0*bending_modulus*(1.0-shape.GetPoisson())/(shape.GetEH0()*surface_tension));
+                        << setw(12) << sqrt(12.0*bending_modulus*(1.0-shape.GetPoisson()*shape.GetPoisson())/(shape.GetEH0()*surface_tension));
                 } else {
                         sequence
                         << setw(12) << 0
@@ -437,7 +437,7 @@ void Sequence(LaplaceData *reference, double pressure, double poisson, double co
                         report << "<tr><td>average wrinkle wavelength</td><td>" << lambda*length_scale/reference->GetConversion() << "m</td></tr>" << endl;
                         report << "<tr><td>bending modulus</td><td>" << bending_modulus << "Nm</td></tr>" << endl;
                         report << "<tr><td>f&oumlppl von karman number</td><td>" << shape.GetEH0()*surface_tension*pow(MaximumRadius(&shape)*length_scale, 2)/bending_modulus << "</td></tr>" << endl;
-                        report << "<tr><td>thickness of layer</td><td>" << sqrt(12.0*bending_modulus*(1.0-shape.GetPoisson())/(shape.GetEH0()*surface_tension)) << "m</td></tr>" << endl;
+                        report << "<tr><td>thickness of layer</td><td>" << sqrt(12.0*bending_modulus*(1.0-shape.GetPoisson()*shape.GetPoisson())/(shape.GetEH0()*surface_tension)) << "m</td></tr>" << endl;
                         report << "</table></td></table>" << endl;
                 }
         }
