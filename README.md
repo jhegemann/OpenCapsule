@@ -42,6 +42,7 @@ please cite the following articles!
 * Pendant capsule elastometry  
   J. Hegemann, S. Knoche, S. Egger, M. Kott, S. Demand, A. Unverfehrt, H. Rehage, and J. Kierfeld  
   Journal of Colloid and Interface Science, ... to be published
+  https://arxiv.org/pdf/1705.11134.pdf
 
 * Elastometry of deflated capsules: Elastic moduli from shape and wrinkle analysis  
   S. Knoche, D. Vella, E. Aumaitre, P. Degen, H. Rehage, P. Cicuta, and J. Kierfeld  
