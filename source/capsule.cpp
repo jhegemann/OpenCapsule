@@ -57,9 +57,8 @@ void HookeEquation(double s, double *y, double *y_ext, double *f, HookeData *dat
         double a = data->undeformed->parameters[2];
         double p = pi[0] / a;
         double nu = pi[1];
-        //double EH0 = pi[2] * (2.0 * (1.0 - nu));
-        double EH0 = pi[2];
-        double rho = data->undeformed->parameters[1] / a / a;
+        double EH0 = pi[2] * (2.0 * (1.0 - nu));
+	double rho = data->undeformed->parameters[1] / a / a;
         double r0 = gsl_spline_eval(data->undeformed->splines.r_s, s, data->undeformed->splines.acc);
         if (fabs(s) < 1.0e-8)
         {
