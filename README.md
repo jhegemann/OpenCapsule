@@ -530,7 +530,9 @@ the regression of these specific parameters. Note that
 this is a constraint and will probably lead to higher 
 fit errors. In case of only weakly deflated capsules 
 you can deactivate `EXTENDED_SHOOTING` to improve speed 
-of the algorithm. You can change the constitutive law
+of the algorithm. 
+
+You can change the constitutive law
 OpenCapsule uses to determine the elastic constants via
 `CONSTITUTIVE_LAW`. The standard value `CONSTITUTIVE_LAW 1`
 applies nonlinear Hookean elasticity. For Mooney-Rivlin elasticity
