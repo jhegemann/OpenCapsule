@@ -6,33 +6,40 @@ Framework: Sebastian Knoche (sebastian.knoche@tu-dortmund.de)
 Supervisor: Jan Kierfeld (jan.kierfeld@tu-dortmund.de)  
 
 ## Description:
-We provide a C/C++ software for the shape analysis of 
-deflated elastic capsules in a pendant capsule geometry, 
-which is based on the proper elastic description of the 
-capsule material as a quasi two-dimensional elastic layer 
-using shell theory. This pendant capsule elastometry 
-provides a new tool for interfacial rheology of capsules 
-that goes beyond determination of the Gibbs- or dilatational 
-modulus from area-dependent measurements of the surface 
-tension using pendant drop tensiometry, which can only 
-give a rough estimate of the elastic capsule properties 
-as they are based on a purely liquid interface model. 
-The software allows the user to determine the following quantities 
-for each digitized image of a deflated capsule shape 
-given another image of its undeformed reference shape: 
-the surface tension characterizing the reference shape, 
-Young's surface modulus (or alternatively area compression 
-modulus) and Poisson's ratio. If series of images are 
-available, these moduli can be determined as a function 
-of the capsule volume to analyze viscoelastic effects 
-for different volume change rates and aging effects 
-depending on the deformation history. An additional 
-wrinkling wavelength measurement allows the user to determine 
-the bending modulus, from which the layer thickness 
-can be derived. We verified the method by analyzing 
-several materials and comparing the results to available 
-rheological measurements. We make the software 
-available under the GPL license. 
+We provide a C/C++ software for 
+the shape analysis of deflated elastic capsules in a
+pendant capsule geometry, which is based on an elastic description of
+the capsule material as a quasi two-dimensional elastic membrane using shell
+theory. 
+OpenCapsule provides a new tool
+for interfacial rheology of elastic capsules that goes beyond 
+determination of the  Gibbs- or dilatational modulus from 
+area-dependent measurements of the surface tension using 
+pendant drop tensiometry,
+which can only give a rough estimate of the elastic capsule properties as they
+are based on a purely liquid interface model.
+Given an elastic model of the capsule membrane, OpenCapsule
+determines optimal elastic moduli by fitting numerically generated 
+axisymmetric shapes optimally to an experimental image. 
+For each digitized image of a deflated capsule elastic moduli 
+can be determined given 
+another image of its undeformed reference shape.
+OpenCapsule's main purpose is nonlinear Hookean elasticity, due to 
+its low computational cost and its wide applicability.
+For Hookean elasticity, Young's
+surface modulus (or, alternatively, area compression modulus) 
+and  Poisson's ratio are determined; for Mooney-Rivlin 
+elasticity, the Rivlin modulus and a dimensionless shape parameter 
+are determined; for neo-Hookean
+elasticity, only the Rivlin modulus is determined, using a fixed
+dimensionless shape parameter.
+If series of images are available,
+these moduli can be determined as a function of the capsule volume
+to analyze hysteresis or aging effects depending on the deformation history
+or to detect viscoelastic effects for different volume change rates. 
+An additional wrinkling wavelength measurement allows the user 
+to determine the bending modulus, from which 
+the layer thickness can be derived. 
 
 ## Publications/Citation
 If you use OpenCapsule in your research department or
@@ -48,7 +55,14 @@ please cite the following articles!
   S. Knoche, D. Vella, E. Aumaitre, P. Degen, H. Rehage, P. Cicuta, and J. Kierfeld  
   Langmuir, Vol. 29, No. 40, Pages 12463--12471, 2013, ACS Publications
 
-## Installation Guide
+## Support
+
+If you have any problems using OpenCapsule, please do not hesitate to contact us!
+
+## Contributing
+We expressly welcome contributions to the source code or the documentation!
+
+## Installation guide
 
 OpenCapsule was tested (successful compilation and execution) on 
 Ubuntu 16.04 LTS and Scientific Linux 6.6 with GNU/GCC compiler. 
@@ -68,14 +82,14 @@ the libraries manually. OpenCapsule uses OpenCV for image
 handling and therefore only supports the image formats 
 supported by your specific installation. Check if all PATH 
 variables are set appropriately or adapt the Makefile by 
-informing g++ explicitly where to find the libraries by 
-using the -L option. Finally, simply type
+informing `g++` explicitly where to find the libraries by 
+using the `-L` option. Finally, simply type
 
 ```
 make
 ```
 
-to compile the project. If you like to 
+to compile the OpenCapsule sources. If you like to 
 set up a more usable working environment also type
 
 ```
@@ -86,21 +100,21 @@ to make OpenCapsule accessible in all working directories.
 
 ## Image requirements
 
-To ensure images are compatible with OpenCapsule 
+To ensure that images are compatible with OpenCapsule 
 and can be analyzed correctly, they have to 
-meet several requirements, which are given in the following. 
+meet several requirements, which are specified in the following. 
 
 * The needle should be visible in the upper part of the image.
 * As far as possible, the capsule should to be aligned along the vertical axis.
 * Gravitational forces should act along the vertical axis.
 * The background should be equally colored with no other objects or artefacts in there troubling contour detection.
 * The camera should not be moved during recording of the sequence.
-* Inner and outer capillary diameter should differ significantly.
 
 If you are not sure what your images should look like,
-take a look at the publications listed above.
+take a look at the publications listed above or check out
+the `./test` folder in the project.
 
-## Getting Started
+## Getting started
 
 To give an impression of the typical command line 
 workflow some examples are given in the following. 
@@ -108,18 +122,24 @@ A typical task would be to perform a Laplace-Young
 analysis, which is nowadays the standard algorithm 
 for analyzing droplets and capsules. Based on this, 
 OpenCapsule provides an additional algorithm based 
-on Hookean elasticity, which is capable to describe 
+on nonlinear Hookean elasticity (or, alternatively, 
+neo-Hookean or Mooney-Rivlin elasticity), 
+which is capable to describe 
 shapes of elastic shells more accurately than the 
 Laplace-Young analysis. This model exhibits much 
 more information, such as the elastic moduli, stress 
 distributions and details about the wrinkling. 
 OpenCapsule differs from other implementations 
 by a high degree of automation and numerical 
-robustness. Change to your prefered working 
+robustness. 
+
+Change to your preferred working 
 directory and call OpenCapsule by simply typing
+
 ```
 OpenCapsule
 ```
+
 in the shell. If your working environment is set 
 up correctly, OpenCapsule gives you some general 
 information about itself. Additionally, all 
@@ -137,22 +157,26 @@ and `EXPERIMENT_DENSITY` in SI units. If you
 are not sure how to handle the configuration 
 file, see the corresponding section for 
 more details about this. Next, typing
+
 ```
 OpenCapsule -h
 ```
+
 will give you an overview over the command line 
-options as well as a list of common examples. 
+options as well as a list of common examples,
+which are explained briefly here.
 The results of the following standard commands 
 are placed in the `./global_out/` folder, where 
 you will find the results listed in plain 
 `*.txt` files, images in `*.png` format, and 
-wrapped in a comprehensive html-report. 
+all together wrapped in a comprehensive html-report. 
 
 ### Edge Detection
 
 ```
 OpenCapsule -i [path to image]
 ```
+
 This command performs an isolated image analysis 
 of the image specified by the relative 
 path `./path-to-image/image.png`. 
@@ -160,27 +184,36 @@ If your image processing fails or results are
 obviously bad, you can adapt OpenCapsule to your 
 specific images. Try to tune the related values 
 in the configuration file to get an optimal 
-result. If everything works fine, perform the shape analysis. 
+result. If everything works fine, 
+perform the shape analysis. 
 
 ### Laplace-Young Analysis
+
 ```
 OpenCapsule -r
 ```
-This command triggers the standard Laplace-Young analysis. 
+
+This command triggers the standard Laplace-Young analysis
+for the files listed under `REFERENCE_SHAPE`. 
 No initial values have to be specified. 
 
-### Elastic/Hookean Analysis
+### Elastic Analysis
+
 ```
 OpenCapsule -s
 ```
-This command triggers the Hookean shape analysis 
+
+This command triggers the Hookean (or, alternatively, 
+neo-Hookean or Mooney-Rivlin) shape analysis 
 and will automatically use the specified reference 
-shapes. _This Hookean shape analysis sets OpenCapsule apart from
+shapes. _This elastic shape analysis sets OpenCapsule apart from
 available commercial software packages._
 You can also provide initial values by using the call
+
 ```
 OpenCapsule -s --poisson 0.5 --compression 10.0 --pressure 1.0
 ```
+
 These three parameters are optional. The first 
 one specifies an initial guess of Poisson's 
 ratio. The second one specifies an initial 
@@ -192,7 +225,13 @@ of the deflated capsule in units of the surface
 tension and the inverse capillary diameter. Only 
 if the simple call without initial values gives 
 no adequate result, you should provide intitial 
-values for the fit parameters. 
+values for the fit parameters. Note that, when using
+Mooney Rivlin elasticity instead of nonlinear 
+Hookean elasticity, the `--compression` argument 
+corresponds to the Rivlin modulus and the
+`--poisson` argument corresponds to the dimensionless
+shape parameter. Read more about changing the constitutive
+relations in the section about the configuration file.
 
 ## Generated Output
 The essential results are saved to the 
@@ -202,7 +241,7 @@ summarized results written to the files
 a lot of miscellaneous output is generated 
 including the determined shapes, extracted 
 contours, binary images and general image 
-information, i.e. quantities measured from 
+information, i.e., quantities measured from 
 the binary image. The most instructive output 
 is the input image with the determined shape 
 and wrinkle domain overlayed. From these 
@@ -211,7 +250,7 @@ analysis was successful. With `GNUPLOT_SUPPORT`
 activated you also get all relevant plots 
 as `*.eps` files. Don't worry about the large 
 number of output files. They are named 
-intuitively and self explanatory. The file 
+intuitively and self explanatory. Moreover, the file 
 `report.html` merges a lot of information 
 into a single file, including all determined 
 values in SI units and images with shapes overlayed.
@@ -219,25 +258,31 @@ values in SI units and images with shapes overlayed.
 ## License
 OpenCapsule is GPLv3 licensed and thereby 100% 
 Open Source Software. See LICENSE for details.
+Contributions are expressly welcome.
 
 ## Example
 To check if OpenCapsule works on your machine
 we provide two (artificial)
 capsule images placed in the `test` folder. 
 Go to the `test` directory and call 
+
 ``` 
 ./OpenCapsule -s
 ```
+
 to analyze the test images.
 Your results will be placed in the `global_out` folder.
 To compare them with the results provided by us call
+
 ```
 diff global_out/reference.dat result/reference.dat
 diff global_out/sequence.dat result/sequence.dat
 ```
+
 If these files are equal,
 you can try to change some values in
-the configuration file or add some new variables.
+the configuration file or add some new variables
+to get a feeling for the effects of these changes.
 See below for details about the configuration file.
 
 ## Frequent Issues
@@ -266,7 +311,9 @@ to get an impression of what happens. Then, carefully
 tune the corresponding numerical thresholds, e.g. 
 lower the required accuracies `EPS_XXX`. Also think 
 about tuning your initial values and make sure 
-`NELDERMEAD_PREFITTING` is enabled.
+`NELDERMEAD_PREFITTING` is enabled. The paper
+_Pendant Capsule Elastometry_ contains a list of 
+standard thresholds in the appendix.
 
 ### OpenCapsule simply aborts before doing anything...
 
@@ -276,13 +323,16 @@ and backed by a real file. Check if your
 configuration file contains all necessary values. 
 Consider a rollback to the standard configuration file.
 
-## Upcoming Changes
-In addition to Hookean elasticity, we plan to implement 
-more elastic material laws, such as Mooney-Rivlin 
-elasticity. This could help to decide which material 
-law fits best for a specific capsule type. We also 
-aim to implement extensions in order to include 
-viscoelastic effects. Having analyzed plenty of materials 
+## Alternative elasticity models
+In addition to nonlinear Hookean elasticity, we implemented
+additional elastic material laws, such as Mooney-Rivlin,
+or neo-Hookean elasticity. This helps to decide which material 
+law fits best for a specific capsule type. Note that
+we recommend the standard nonlinear Hookean elasticity,
+due to its high performance and wide applicability.
+
+## Future perspective
+Having analyzed plenty of materials 
 in the future, it would be useful to have a large
 database collecting all the different materials/capsules 
 similar to already existing protein- or gen-databases.
@@ -346,7 +396,7 @@ specific input data. If you dare/need to change
 some of the numerical constants, you should exactly 
 know what you are doing and be very careful, 
 because values are tested/optimized intensively 
-and small changes can dramatically change the behaviour of the algorithms.
+and small changes can dramatically change the behavior of the algorithms.
 ```
 EPS_RMS 1e-16 (1.0e-16 .. 1.0e-12)
 ```
@@ -368,13 +418,13 @@ EPS_MULTI_SHOOTING 1e-6 (1.0e-8 .. 1.0e-4)
 ```
 Shooting method used to improve single shooting 
 stops if euclidian norm of residual falls 
-below this threshold. Residual aggregates 
+below this threshold. The residual aggregates 
 all distance vectors between individual segments of solution.
 ```
 DX_FIT 1e-6 (1.0e-8 .. 1.0e-4)
 ```
 Interval width used to determine numerical 
-derivatives during regression, i.e. 
+derivatives during regression, i.e.,
 change of shape with parameters (moduli, pressure, ..).
 ```
 DX_SHOOTING 1e-6 (1.0e-8 .. 1.0e-4)
@@ -414,13 +464,14 @@ SCALE_IMAGE 1e-2
 ```
 Extracted contour points from image are simply 
 multiplied by this value to do some prescaling 
-before fitting reference shapes.
+before fitting reference shapes. This value corresponds
+to the typical inverse resolution of a capsule image.
 ```
 T_LOW 0.3, T_HIGH 0.6 (0.0 .. 1.0)
 ```
 Lower and higher threshold of hysteresis 
 algorithm performed as last step of edge 
-detection. you can safely use higher values, 
+detection. You can safely use higher values, 
 OpenCapsule will automatically lower 
 the thresholds if no closed contour is found.
 ```
@@ -438,7 +489,7 @@ smoothing with differently sized gaussians).
 THRESHOLD_CAPILLARY 5 (1 .. 20)
 ```
 Used for tracing outer capillary from upper 
-image border to inner capillary. searching 
+image border to inner capillary. Searching 
 terminates if contour pixel deviates more 
 than this threshold from average horizontal position.
 ```
@@ -460,7 +511,7 @@ FIX_CHARACTERISTICS 1
 ```
 Capillary position will be detected only from 
 reference state, elastic states then use the 
-same position. this option is useful if capsule 
+same position. This option is useful if capsule 
 shapes occur, which are parallel to the needle 
 at the capsule mounting point. You can keep 
 `FIX_CHARACTERISTICS` activated if you are sure 
@@ -469,7 +520,7 @@ during the whole video.
 
 ### 5) Functional switches/features (user-space)
 
-These switches can be set to 1 (active) and 0 (inactive) 
+Most of these switches can be set to 1 (active) and 0 (inactive) 
 and are used to control program flow. For example you can 
 activate `NELDERMEAD_PREFITTING` (recommended if you can 
 only roughly imagine your initial values for elastic 
@@ -478,7 +529,29 @@ the pressure or know poisson's ratio you can switch of
 the regression of these specific parameters. Note that 
 this is a constraint and will probably lead to higher 
 fit errors. In case of only weakly deflated capsules 
-you can deactivate `EXTENDED_SHOOTING` to improve speed of the algorithm.
+you can deactivate `EXTENDED_SHOOTING` to improve speed 
+of the algorithm. You can change the constitutive law
+OpenCapsule uses to determine the elastic constants via
+`CONSTITUTIVE_LAW`. The standard value `CONSTITUTIVE_LAW 1`
+applies nonlinear Hookean elasticity. For Mooney-Rivlin elasticity
+change this value to `CONSTITUTIVE_LAW 2`. For neo-Hookean elasticity likewise use
+`CONSTITUTIVE_LAW 2`, set `FIT_POISSON 0` and call OpenCapsule with 
+the corresponding initial value `--poisson 1.0`. Note that, internally, the area
+compression modulus turns to the Rivlin modulus and the Poisson ratio turns to
+the dimensionless shape parameter. This is why the variables `FIT_COMPRESSION`
+and `FIT_POISSON` are related to the corresponding quantities of the Mooney-Rivlin
+elasticity when changing the constitutive law to `CONSTITUTIVE_LAW 2`. 
+Likewise, the command line arguments `--compression` and `--poisson` change 
+their meaning. When performing the shape fitting with Mooney Rivlin elasticity
+it may occur, that the dimensionless shape parameter becomes `1` and, 
+thus, the fit does not converge properly. In this case, you should employ
+the neo-Hookean model by additionally setting `FIT_POISSON 0` and calling
+OpenCapsule with the command line argument `--poisson 1` to obtain a valid result.
+Choosing `CONSTITUTIVE_LAW 0` activates linear Hookean elasticity. 
+Since linear Hookean elasticity can only describe very small deformations,
+we were not able to determine reliable fits using this more 
+simple model and, thus, do not recommend it. 
+
 
 ```
 FIT_PRESSURE 1
@@ -508,6 +581,13 @@ Activates/deactivates symmetric aligning of two the contour points associated wi
 NELDERMEAD_PREFITTING 0
 ```
 Activates/deactivates nelder-mead regression before newton regression.
+```
+CONSTITUTIVE_LAW 1
+```
+Chooses the constitutive law that is used for elastometry.
+`CONSTITUTIVE_LAW 0` activates linear Hookean, 
+`CONSTITUTIVE_LAW 1` activates nonlinear Hookean,
+and `CONSTITUTIVE_LAW 2` activates Mooney-Rivlin elasticity. 
 ```
 PARAMETER_TRACING 0
 ```
@@ -541,7 +621,9 @@ Specifies folder, in which automatically generated gnuplot scripts are placed.
 
 ### 7) Debugging:
 
-These switches are very useful for debugging purposes. If something goes seriously wrong, you should activate some of the following switches to see what happens.
+These switches are very useful for debugging purposes. 
+If something goes seriously wrong or you contribute to the OpenCapsule project,
+you should activate some of the following switches to see what happens internally.
 ```
 WATCH_SINGLE_SHOOTING 0
 ```

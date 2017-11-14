@@ -110,6 +110,8 @@ int main(int argc, char **argv)
         
         if (vm.count("help")) 
         {
+		InitializeSolver();
+		SimpleHooke("test.txt", 2.0, 0.25, 1.0, 1.0, 0.5, 10.0);
                 cout << desc << endl;
                 cout << "Usage Examples:" << endl;
                 cout << "  OpenCapsule --image ./input/test.png" << endl;

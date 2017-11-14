@@ -39,6 +39,9 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_eigen.h>
+#include <gsl/gsl_roots.h>
+#include <gsl/gsl_multiroots.h>
+#include <gsl/gsl_errno.h>
 #include "objects.h"
 #include "config.h"
 
@@ -47,6 +50,8 @@ using namespace std;
 #define FMT setw(20) << setprecision(10)
 
 typedef vector< pair<double,double> > PointSet;
+
+void SetConstitutiveLaw();
 
 /* ODE evaluation and stability testing */
 /* right side evaluation of Laplace-Young system 
@@ -62,6 +67,8 @@ void LaplaceEquation(double s, double *y, double *f, LaplaceData *data);
  * f : right side
  * data contains parameter set, solution and splines */
 void HookeEquation(double s, double *y, double *y_ext, double *f, HookeData *data);
+void HookeEquationMooneyRivlin(double s, double *y, double *y_ext, double *f, HookeData *data);
+void HookeEquationLinear(double s, double *y, double *y_ext, double *f, HookeData *data);
 /* jacobian calculation of Hooke system
  * jacobian stored in J
  * used for implicit integration and stability analysis */

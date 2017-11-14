@@ -76,6 +76,7 @@ using namespace std;
 #define STD_EXPERIMENT_CAPDIAMETER 0.00165
 #define STD_GAMMA_SCALE 1.0
 #define STD_WRINKLING_WAVELENGTH 0.0
+#define STD_CONSTITUTIVE_LAW 1
 
 extern vector<string> REFERENCE_SHAPE;
 extern vector<string> ELASTIC_SHAPE;
@@ -127,6 +128,7 @@ extern double EXPERIMENT_DENSITY;
 extern double EXPERIMENT_CAPDIAMETER;
 extern double GAMMA_SCALE;
 extern double WRINKLING_WAVELENGTH;
+extern int CONSTITUTIVE_LAW; /* 0: linear hooke, 1: non-linear hooke, 2: mooney-rivlin */
 
 size_t replace_all(string& str, const string from, const string to);
 void trim_wss(string& str);

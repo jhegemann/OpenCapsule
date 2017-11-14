@@ -17,9 +17,133 @@
 
 #include "capsule.h"
 
+void (*ShapeEquation)(double, double*, double*, double*, HookeData*);
+
+void SetConstitutiveLaw() 
+{
+	switch (CONSTITUTIVE_LAW) 
+	{
+		case 0:
+			ShapeEquation = &HookeEquationLinear;
+			break;
+		case 1:
+			ShapeEquation = &HookeEquation;
+			break;
+		case 2:
+			ShapeEquation = &HookeEquationMooneyRivlin;
+			break;
+		default:
+			printf("invalid constitutive law!\n"); fflush(stdout);
+			exit(1);
+			break;
+	}	
+}
+
+struct rivlin_params { double ts; double tp; double ls; double lp; double em; double psi; };
+struct hooke_params { double ts; double tp; double ls; double lp; double eh0; double nu; };
+
 bool CompareVertices(const Vertex *v1, const Vertex *v2)
 {
         return (v1->error < v2->error);
+}
+
+double TauS(double ls, double lp, double EM, double PSI)
+{
+	return (EM/(3.0*ls*lp))*(ls*ls-1.0/(ls*ls*lp*lp))*(PSI+(1.0-PSI)*lp*lp) + GAMMA_SCALE;
+}
+
+double TauP(double ls, double lp, double EM, double PSI)
+{
+	return (EM/(3.0*ls*lp))*(lp*lp-1.0/(ls*ls*lp*lp))*(PSI+(1.0-PSI)*ls*ls) + GAMMA_SCALE;
+}
+
+double TauSMinWrinkle(double ls, double lp, double tsbar, double lpbar, double EM, double PSI) 
+{
+	return tsbar - (EM/(3.0*ls*lpbar))*(ls*ls-1.0/(ls*ls*lp*lp))*(PSI+(1.0-PSI)*lp*lp) - (lp/lpbar)*GAMMA_SCALE;
+}
+
+double TauPMinWrinkle(double ls, double lp, double EM, double PSI)
+{
+	return (EM/(3.0*ls*lp))*(lp*lp-1.0/(ls*ls*lp*lp))*(PSI+(1.0-PSI)*ls*ls) + GAMMA_SCALE;
+}
+
+double TauSMin(double ts, double tp, double ls, double lp, double EM, double PSI) 
+{
+	return ts - (EM/(3.0*ls*lp))*(ls*ls-1.0/(ls*ls*lp*lp))*(PSI+(1.0-PSI)*lp*lp) - GAMMA_SCALE;
+}
+
+double TauPMin(double ts, double tp, double ls, double lp, double EM, double PSI)
+{
+	return tp - (EM/(3.0*ls*lp))*(lp*lp-1.0/(ls*ls*lp*lp))*(PSI+(1.0-PSI)*ls*ls) - GAMMA_SCALE;
+}
+
+double TauMinSing(double t, double l, double EM, double PSI) 
+{
+	return t - (EM/3.0)*(1.0-1.0/pow(l, 6))*(PSI+(1.0-PSI)*l*l) - GAMMA_SCALE;
+}
+
+int StrainMooneyRivlin(const gsl_vector *x, void *params, gsl_vector *f) 
+{
+	struct rivlin_params *p = (struct rivlin_params *) params;
+	
+	const double x0 = gsl_vector_get(x, 0);
+	const double x1 = gsl_vector_get(x, 1);
+
+	const double y0 = TauSMin(p->ts, x0, x1, p->lp, p->em, p->psi);
+	const double y1 = TauPMin(p->ts, x0, x1, p->lp, p->em, p->psi);
+
+	gsl_vector_set(f, 0, y0);
+	gsl_vector_set(f, 1, y1);
+
+	return GSL_SUCCESS;
+}
+
+double StrainMooneyRivlinSing(double x, void *params) 
+{
+	struct rivlin_params *p = (struct rivlin_params *) params;
+	return TauMinSing(p->ts, x, p->em, p->psi);
+}
+
+int StrainMooneyRivlinWrinkle(const gsl_vector *x, void *params, gsl_vector *f) 
+{
+	struct rivlin_params *p = (struct rivlin_params *) params;
+	
+	const double x0 = gsl_vector_get(x, 0);
+	const double x1 = gsl_vector_get(x, 1);
+
+	const double y0 = TauSMinWrinkle(x0, x1, p->ts, p->lp, p->em, p->psi);
+	const double y1 = TauPMinWrinkle(x0, x1, p->em, p->psi);
+
+	gsl_vector_set(f, 0, y0);
+	gsl_vector_set(f, 1, y1);
+
+	return GSL_SUCCESS;
+}
+
+double TauSMinHookeWrinkle(double ls, double lp, double tsbar, double lpbar, double EH0, double NU) 
+{
+	return tsbar - (lp/lpbar)*(EH0/(1.0-NU*NU))*((ls-1.0)+NU*(lp-1.0)) - (lp/lpbar)*GAMMA_SCALE;
+}
+
+double TauPMinHookeWrinkle(double ls, double lp, double EH0, double NU) 
+{
+	return (EH0/(1.0-NU*NU))*((lp-1.0)+NU*(ls-1.0)) + GAMMA_SCALE;
+}
+
+int StrainHookeLinearWrinkle(const gsl_vector *x, void *params, gsl_vector *f) 
+{
+	struct hooke_params *p = (struct hooke_params *)params;
+	
+	const double x0 = gsl_vector_get(x, 0);
+	const double x1 = gsl_vector_get(x, 1);
+	
+	const double y0 = TauSMinHookeWrinkle(x0, x1, p->ts, p->lp, p->eh0, p->nu);
+	const double y1 = TauPMinHookeWrinkle(x0, x1, p->eh0, p->nu);
+	
+	gsl_vector_set(f, 0, y0);
+	gsl_vector_set(f, 1, y1);
+	
+	return GSL_SUCCESS;
 }
 
 /* output parameter: right side f */
@@ -46,6 +170,194 @@ void LaplaceEquation(double s, double *y, double *f, LaplaceData *data)
         }
 }
 
+const gsl_multiroot_fsolver_type *T2d = gsl_multiroot_fsolver_hybrids;
+gsl_multiroot_fsolver *s2d = gsl_multiroot_fsolver_alloc(T2d, 2);  
+const gsl_root_fsolver_type *T1d = gsl_root_fsolver_brent;
+gsl_root_fsolver *s1d = gsl_root_fsolver_alloc(T1d);
+
+/* output parameter: right side f */
+void HookeEquationMooneyRivlin(double s, double *y, double *y_ext, double *f, HookeData *data)
+{
+        /* params[0] : deformed pressure - p
+         * params[1] : poisson ratio - nu
+         * params[2] : area compression modulus - k */
+	struct rivlin_params params;
+        int dim = data->dim;
+        double *pi = data->parameters;
+        double a = data->undeformed->parameters[2];
+        double p = pi[0] / a;
+        double nu = pi[1];
+	double EH0 = pi[2];
+	double rho = data->undeformed->parameters[1] / a / a;
+        double r0 = gsl_spline_eval(data->undeformed->splines.r_s, s, data->undeformed->splines.acc);
+        if (fabs(s) < 1.0e-8)
+        {
+                /* singularity evaluation in apex/on symmetry axis */
+		gsl_function strain_function;
+		strain_function.function = &StrainMooneyRivlinSing;
+		params.ts = y[3];
+		params.em = EH0;
+		params.psi = nu;
+		strain_function.params = &params;
+		double x_lo = 0.5;
+		double x_hi = 1.5;
+		double r = 1;
+		gsl_root_fsolver_set(s1d, &strain_function, x_lo, x_hi);
+		int status;
+		int iter = 0;
+		do
+		{
+			iter++;
+			status = gsl_root_fsolver_iterate(s1d);
+			r = gsl_root_fsolver_root(s1d);
+			x_lo = gsl_root_fsolver_x_lower(s1d);
+			x_hi = gsl_root_fsolver_x_upper(s1d);
+			status = gsl_root_test_interval(x_lo, x_hi, 1.0e-4, 1.0e-4);		 
+		}
+		while (status == GSL_CONTINUE && iter < 1000);
+		y_ext[0] = r;
+		y_ext[1] = y_ext[0];
+                f[0] = y_ext[0] * cos(y[2]);
+                f[1] = y_ext[0] * sin(y[2]);
+                f[2] = (y_ext[0] * p) / (2.0 * y[3]);
+                f[3] = 0.0;
+		
+		data->lambda_s_trace = y_ext[0];
+		data->tau_phi_trace_1 = y[3];
+		data->integration_mark_0 = true;
+        }
+        else
+        {
+                y_ext[2] = sin(y[2]) / y[0];
+                y_ext[1] = y[0] / r0;
+		params.ts = y[3];
+		params.lp = y_ext[1];
+		params.em = EH0;
+		params.psi = nu;
+		gsl_multiroot_function strain_function = {&StrainMooneyRivlin, 2, &params};
+		if (!data->integration_mark_1) {
+			/* before wrinkling */
+			gsl_vector_set(data->min_vec, 0, data->tau_phi_trace_1); /* TRACER */
+		} else {
+			if (data->integration_mark_2) {
+				/* after wrinkling */
+				gsl_vector_set(data->min_vec, 0, data->tau_phi_trace_2); /* TRACER */
+			}
+		}
+		gsl_vector_set(data->min_vec, 1, data->lambda_s_trace); /* TRACER */
+		gsl_multiroot_fsolver_set(s2d, &strain_function, data->min_vec);
+		int status;
+		int iter = 0;
+		do {
+			iter++;
+			status = gsl_multiroot_fsolver_iterate(s2d);
+			if(status) {
+				break;
+			}
+			status = gsl_multiroot_test_residual(s2d->f, 1e-16);
+		} while(status == GSL_CONTINUE && iter < 1000);
+		y_ext[0] = gsl_vector_get(s2d->x, 1); /* lambda_s */
+		y_ext[3] = gsl_vector_get(s2d->x, 0); /* tau_phi */
+                if (y_ext[3] < 0.0)
+                {
+			gsl_multiroot_function strain_function = {&StrainMooneyRivlinWrinkle, 2, &params};
+			gsl_vector_set(data->min_vec, 0, data->lambda_s_trace); /* TRACER */ /* lambda_s */
+			gsl_vector_set(data->min_vec, 1, data->lambda_phi_trace); /* TRACER */ /* lambda_phi */
+			gsl_multiroot_fsolver_set(s2d, &strain_function, data->min_vec);
+			int status;
+			int iter = 0;
+			do {
+				iter++;
+				status = gsl_multiroot_fsolver_iterate(s2d);
+				if(status) {
+					break;
+				}
+				status = gsl_multiroot_test_residual(s2d->f, 1e-16);
+			} while(status == GSL_CONTINUE && iter < 1000);
+			y_ext[0] = gsl_vector_get(s2d->x, 0);
+			data->lambda_phi_trace = gsl_vector_get(s2d->x, 1);
+		} 
+		data->tau_phi_trace_1 = y_ext[3]; /* TRACER */
+		data->tau_phi_trace_2 = y_ext[3]; /* TRACER */
+ 		data->lambda_s_trace = y_ext[0];
+                f[0] = y_ext[0] * cos(y[2]);
+                f[1] = y_ext[0] * sin(y[2]);
+                if (y_ext[3] < 0.0)
+                {
+                        /* wrinkling domain */
+			if(!data->integration_mark_1) {
+				data->lambda_phi_trace = y_ext[1];
+				data->integration_mark_1 = true;
+			}
+                        f[2] = (y_ext[0] / y[3]) * (p - rho * y[1]);
+                        f[3] = (-1.0) * y_ext[0] * cos(y[2]) * y[3] / y[0];
+                }
+                else
+                {
+                        /* non wrinkling domain */
+			if(data->integration_mark_1) {
+				data->tau_phi_trace_2 = y_ext[3];
+				data->integration_mark_2 = true;
+			}
+                        f[2] = (y_ext[0] / y[3]) * (p - rho * y[1] - y_ext[2] * y_ext[3]);
+                        f[3] = (-1.0) * y_ext[0] * cos(y[2]) * (y[3] - y_ext[3]) / y[0];
+                }
+        }
+}
+
+/* output parameter: right side f */
+void HookeEquationLinear(double s, double *y, double *y_ext, double *f, HookeData *data)
+{
+        /* params[0] : deformed pressure - p
+         * params[1] : poisson ratio - nu
+         * params[2] : area compression modulus - k */
+	struct hooke_params params;
+        int dim = data->dim;
+        double *pi = data->parameters;
+        double a = data->undeformed->parameters[2];
+        double p = pi[0] / a;
+        double nu = pi[1];
+        double EH0 = pi[2] * (2.0 * (1.0 - nu));
+	double rho = data->undeformed->parameters[1] / a / a;
+        double r0 = gsl_spline_eval(data->undeformed->splines.r_s, s, data->undeformed->splines.acc);
+        if (fabs(s) < 1.0e-8)
+        {
+                y_ext[0] = 1.0 + (y[3]-GAMMA_SCALE)*(1.0-nu)/EH0;
+		y_ext[1] = y_ext[0];
+                f[0] = y_ext[0] * cos(y[2]);
+                f[1] = y_ext[0] * sin(y[2]);
+                f[2] = (y_ext[0] * p) / (2.0 * y[3]);
+                f[3] = 0.0;
+        }
+        else
+        {
+                y_ext[2] = sin(y[2]) / y[0];
+                y_ext[1] = y[0] / r0;
+                y_ext[0] = ((1.0 - nu * nu) * (y[3] - GAMMA_SCALE)) / EH0 + 1.0 - nu * (y_ext[1] - 1.0);
+                y_ext[3] = (EH0 / (1.0 - nu * nu)) * ((y_ext[1] - 1.0) + nu * (y_ext[0] - 1.0)) + GAMMA_SCALE;
+                if (y_ext[3] < 0.0) 
+                {
+			double coeff1 = EH0*(EH0+GAMMA_SCALE*(-1.0+nu))*(1.0+2.0*nu);
+			double coeff2 = EH0*EH0*(EH0*EH0 + GAMMA_SCALE*GAMMA_SCALE*(-1.0 + nu)*(-1.0 + nu) + 2.0*EH0*(GAMMA_SCALE*(-1.0+nu) - 2.0*y_ext[1]*y[3]*nu));
+			double ls2 = (coeff1-sqrt(coeff2))/(2.0*EH0*EH0*nu);
+			y_ext[0] = ls2;
+                }		
+                f[0] = y_ext[0] * cos(y[2]);
+                f[1] = y_ext[0] * sin(y[2]);
+                if (y_ext[3] < 0.0)
+                {
+                        f[2] = (y_ext[0] / y[3]) * (p - rho * y[1]);
+                        f[3] = (-1.0) * y_ext[0] * cos(y[2]) * y[3] / y[0];
+                }
+                else
+                {
+                        /* non wrinkling domain */
+                        f[2] = (y_ext[0] / y[3]) * (p - rho * y[1] - y_ext[2] * y_ext[3]);
+                        f[3] = (-1.0) * y_ext[0] * cos(y[2]) * (y[3] - y_ext[3]) / y[0];
+                }
+        }
+}
+
 /* output parameter: right side f */
 void HookeEquation(double s, double *y, double *y_ext, double *f, HookeData *data)
 {
@@ -64,6 +376,7 @@ void HookeEquation(double s, double *y, double *y_ext, double *f, HookeData *dat
         {
                 /* singularity evaluation in apex/on symmetry axis */
                 y_ext[0] = (1.0 + nu) / ((1.0 + nu) - (y[3] - GAMMA_SCALE) * (1.0 - nu * nu) / EH0); 
+		y_ext[1] = y_ext[0];
                 f[0] = y_ext[0] * cos(y[2]);
                 f[1] = y_ext[0] * sin(y[2]);
                 f[2] = (y_ext[0] * p) / (2.0 * y[3]);
@@ -95,6 +408,7 @@ void HookeEquation(double s, double *y, double *y_ext, double *f, HookeData *dat
                 }
         }
 }
+
 
 /* calculate eigenvalues of matrix A and store in eva */
 void EigenValues(gsl_matrix *A, double *eva, int N)
@@ -371,15 +685,14 @@ void HookeRungeKutta(double s, double h, HookeData *data)
         
         y2 = data->y2;
         y3 = data->y3;
-        y4 = data->y4;
-        
-        HookeEquation(s, y, y_ext, k1, data);
+        y4 = data->y4;       
+        ShapeEquation(s, y, y_ext, k1, data);
         for (int i = 0; i < dim; i++) y2[i] = y[i] + 0.5*h*k1[i];
-        HookeEquation(s + 0.5*h, y2, y_ext, k2, data);
+        ShapeEquation(s + 0.5*h, y2, y_ext, k2, data);
         for (int i = 0; i < dim; i++) y3[i] = y[i] + 0.5*h*k2[i];
-        HookeEquation(s + 0.5*h, y3, y_ext, k3, data);
+        ShapeEquation(s + 0.5*h, y3, y_ext, k3, data);
         for (int i = 0; i < dim; i++) y4[i] = y[i] + h*k3[i];
-        HookeEquation(s + h, y4, y_ext, k4, data);
+        ShapeEquation(s + h, y4, y_ext, k4, data);
         
         for (int i = 0; i < dim; i++) yrk4[i] = y[i] + h*(1.0/6.0)*(k1[i] + 2.0*k2[i] + 2.0*k3[i] + k4[i]);
         for (int i = 0; i < dim; i++) y[i] = yrk4[i];
@@ -806,6 +1119,7 @@ bool SingleShooting(HookeData *data, double t_max, double target)
         double d[m];
         double d_min;
         double s_min;
+	int i_min;
         double a, b;
         a = 1e-2;
         b = 2.0;
@@ -820,8 +1134,6 @@ bool SingleShooting(HookeData *data, double t_max, double target)
                         s[i] = a + i * h;
                 }
                 
-                /* compute solutions in parallel */
-                //#pragma omp parallel for private(i) shared(f,l) num_threads(4)
                 for (int i = 0; i < m; i++)
                 {
                         l[i].SetParameters(pref1, pref2, pref3);
@@ -849,6 +1161,7 @@ bool SingleShooting(HookeData *data, double t_max, double target)
                         {
                                 d_min = fabs(d[i]);
                                 s_min = s[i];
+				i_min = i;
                         }
                 }
                 
@@ -864,6 +1177,12 @@ bool SingleShooting(HookeData *data, double t_max, double target)
                         cout << "Single shooting Minimum           " << setw(15) << d_min << endl;
                         cout << endl;
                 }
+                
+                /*
+                if (d_min < EPS_SINGLE_SHOOTING) {
+			if (WATCH_SINGLE_SHOOTING) cout << "accuracy reached... single shooting converged." << endl;
+			break;
+		}*/
                 
                 bool zero_crossing = false;
                 bool interval_changed = true;
@@ -1251,8 +1570,8 @@ bool ParallelShooting(HookeData *data, int p_interval)
                 }
                 
                 /* check if error has increased
-                 * perform 200 iterations on max */
-                if ((error_next >= error_prev) || (it > 200))
+                 * perform 100 iterations on max */
+                if ((error_next >= error_prev) || (it > 100))
                 {
                         if (WATCH_MULTI_SHOOTING) cout << "Error increased.." << flush << endl;
                         if (p_interval < 16) 
@@ -1329,6 +1648,8 @@ bool ParallelShooting(HookeData *data, int p_interval)
  * function used in shooting method */
 void SolveHooke(HookeData *data)
 {
+// 	gsl_vector_set(data->min_trace, 0, 1.0);
+// 	gsl_vector_set(data->min_trace, 1, 1.0);
         SolveHooke(data, 0.0, data->undeformed->L0); 
 }
 
@@ -1368,6 +1689,16 @@ void SolveHooke(HookeData *data, double t_min, double t_max)
         double tmp1, tmp2, tmp3, tmp4;
         
         int it = 0;
+	
+	data->lambda_s_trace = 1.0;
+	data->lambda_phi_trace = 1.0;
+	data->tau_phi_trace_1 = 1.0;
+	data->tau_phi_trace_2 = 1.0;
+	data->integration_mark_0 = false;
+	data->integration_mark_1 = false;
+	data->integration_mark_2 = false;
+	data->integration_mark_3 = false;
+	
         while (t < t_max)
         {
                 tmp1 = y[0];
@@ -1390,7 +1721,7 @@ void SolveHooke(HookeData *data, double t_min, double t_max)
                 if (t <= 0.01*data->L0)
                 {
                         HookeRungeKutta(t, h, data);
-                }
+		}
                 else
                 {
                         if (IMPLICIT_INTEGRATION)
@@ -1405,11 +1736,10 @@ void SolveHooke(HookeData *data, double t_min, double t_max)
                 
                 t += h;
                 
-                
                 z_after_step = y[1];
                 psi_after_step = y[2];
                 psi_dev = (psi_after_step - psi_before_step) / h;
-                
+               
                 /* check for valid solution */
                 if ((y[0] > 10.0*ac) || (y[1] > 10.0*ac) || (y[0] <= 0.0) || (y[1] < 0.0) || (y[2] < 0.0) || (y[2] > M_PI) || (y[3] < 0.0))
                 {
@@ -1452,7 +1782,7 @@ void SolveHooke(HookeData *data, double t_min, double t_max)
                 
                 it++;
                 /* store current solution vector */
-                if ((it % (count_steps / 100) == 0) || (t_max - t <= h))
+                if ((it % (count_steps / count_steps) == 0) || (t_max - t <= h))
                 {
                         y0 = y[0];
                         y1 = y[1];
@@ -1595,7 +1925,7 @@ void ScaleLaplace(LaplaceData *data)
 
 /* plot Hooke shape, tension, strain and curvature profiles */
 void PlotHooke(string filename, HookeData *data)
-{
+{	
         ofstream outfile(filename.c_str(), ios::out);
         // header
         outfile << "#" << "L0=" << data->L0 << ",delta_z=" << gsl_spline_eval(data->splines.z_s, 0.0, data->splines.acc) << endl;
@@ -1611,7 +1941,7 @@ void PlotHooke(string filename, HookeData *data)
         << setw(20) << "kappa_phi"
         << setw(20) << "tau_phi" << endl;
         double s;
-        for (s = 0.0; s <= data->L0; s += 1e-2)
+        for (s = 0.0; s <= data->L0; s += 1e-4)
         {
                 outfile 
                 << FMT << s
@@ -1984,7 +2314,7 @@ bool HookeFitIteration(HookeData *data, PointSet *points, bool fit_p, bool fit_n
         double err_prev, err_next;
         bool continue_linesearch = true;
         err_prev = Error(data, points);
-        // gsl_vector_scale(D, 10.0/gsl_blas_dnrm2(D));
+        gsl_vector_scale(D, 10.0/gsl_blas_dnrm2(D));
         
         while (continue_linesearch)
         {
@@ -2011,6 +2341,9 @@ bool HookeFitIteration(HookeData *data, PointSet *points, bool fit_p, bool fit_n
                         if (fit[i])
                         {
                                 params[i] = gsl_vector_get(PI, it) + gsl_vector_get(D, it);
+				if((i == 1) && (params[i] > 1.0)) {
+					params[i] = 1.0;
+				}
                                 it++;
                         }
                         else 
@@ -2019,7 +2352,7 @@ bool HookeFitIteration(HookeData *data, PointSet *points, bool fit_p, bool fit_n
                         }
                 }
                 /* check if parameters in still in between valid boundaries */
-                if ((params[0] <= 0.0) || (params[2] <= 0.0) || (params[1] < (-1.0)) || (params[1] > 1.0))
+                if ((params[0] <= 0.0) || (params[2] <= 0.0) || (params[1] < ((CONSTITUTIVE_LAW == 2) ? 0.0 : -1.0)) || (params[1] > 1.0))
                 {
                         gsl_vector_scale(D, xi);
                 }
@@ -2294,7 +2627,7 @@ double Error(Vertex *v, HookeData *dummy, PointSet *points)
         bool success = SingleShooting(dummy);
         if (success)
         {
-                if ((dummy->GetPoisson() > 1.0) || (dummy->GetPoisson() < -1.0) || (dummy->GetCompression() < 0.0) || (dummy->GetPressure() < 0.0))
+                if ((dummy->GetPoisson() > 1.0) || (dummy->GetPoisson() < ((CONSTITUTIVE_LAW == 2) ? 0.0 : -1.0)) || (dummy->GetCompression() < 0.0) || (dummy->GetPressure() < 0.0))
                 {
                         /* ivalid parameters -> assign very large error */
                         return 1000.0;

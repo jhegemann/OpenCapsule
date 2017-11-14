@@ -67,6 +67,7 @@ double EXPERIMENT_DENSITY = STD_EXPERIMENT_DENSITY;
 double EXPERIMENT_CAPDIAMETER = STD_EXPERIMENT_CAPDIAMETER;
 double GAMMA_SCALE = STD_GAMMA_SCALE;
 double WRINKLING_WAVELENGTH = STD_WRINKLING_WAVELENGTH;
+int CONSTITUTIVE_LAW = STD_CONSTITUTIVE_LAW;
 
 size_t replace_all(string& str, const string from, const string to)
 {
@@ -187,6 +188,7 @@ void parse_configuration()
         if (contains(fs, "PARAMETER_TRACING")) PARAMETER_TRACING = (bool)atoi(fs["PARAMETER_TRACING"].c_str());
         if (contains(fs, "GAMMA_SCALE")) GAMMA_SCALE = atof(fs["GAMMA_SCALE"].c_str());
         if (contains(fs, "WRINKLING_WAVELENGTH")) WRINKLING_WAVELENGTH = atof(fs["WRINKLING_WAVELENGTH"].c_str());
+	if (contains(fs, "CONSTITUTIVE_LAW")) CONSTITUTIVE_LAW = atoi(fs["CONSTITUTIVE_LAW"].c_str());
         
         if (!contains(fs, "EXPERIMENT_DENSITY"))
         {

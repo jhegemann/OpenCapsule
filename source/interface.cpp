@@ -107,6 +107,7 @@ void FinalizeContours(string preamble, double scaling, vector<PointSet*> &contou
 
 void InitializeSolver()
 {
+	SetConstitutiveLaw();
         _reference_image = LoadImages("reference", REFERENCE_SHAPE, _reference_shape, false);
         _elastic_image = LoadImages("elastic", ELASTIC_SHAPE, _elastic_shape, true);
 }
@@ -159,12 +160,13 @@ void SimpleHooke(string filename, double pressure_laplace, double density_laplac
         shape.SetInitialConditions(0.0, 0.0, 0.0, 1.0);
         
         bool success = SingleShooting(&shape);
-        
+	
         if (!success)
         {
                 cout << "No solution found.." << flush << endl;
                 return;
         }
+        
         PlotHooke(extended_filename1.c_str(), &shape);
         
         string ref_filename = "reference_";
@@ -331,7 +333,11 @@ void Sequence(LaplaceData *reference, double pressure, double poisson, double co
         HookeData shape;
         
         cout << setw(40) << "Sequence..." << flush << endl;
-        sequence << "#" << setw(11) << "image" << setw(12) << "p[N/m^2]" << setw(12) << "nu" << setw(12) << "k2d[N/m]" << setw(12) << "rms[px]" << setw(12) << "rel.vol." << setw(12) << "rel.area" << setw(12) << "y2d[N/m]" << setw(12) << "Lw[m]" << setw(12) << "tau_s[N/m]" << setw(12) << "lambda[m]" << setw(12) << "eb[Nm]" << setw(12) << "fppl" << setw(12) << "H0[m]"<< endl;
+	if (CONSTITUTIVE_LAW == 2) {
+		sequence << "#" << setw(11) << "image" << setw(12) << "p[N/m^2]" << setw(12) << "psi-mooney" << setw(12) << "rms[px]" << setw(12) << "rel.vol." << setw(12) << "rel.area" << setw(12) << "Em[N/m]" << setw(12) << "Lw[m]" << setw(12) << "tau_s[N/m]" << setw(12) << "lambda[m]" << setw(12) << "eb[Nm]" << setw(12) << "fppl" << setw(12) << "H0[m]"<< endl;
+	} else {
+		sequence << "#" << setw(11) << "image" << setw(12) << "p[N/m^2]" << setw(12) << "nu" << setw(12) << "k2d[N/m]" << setw(12) << "rms[px]" << setw(12) << "rel.vol." << setw(12) << "rel.area" << setw(12) << "y2d[N/m]" << setw(12) << "Lw[m]" << setw(12) << "tau_s[N/m]" << setw(12) << "lambda[m]" << setw(12) << "eb[Nm]" << setw(12) << "fppl" << setw(12) << "H0[m]"<< endl;
+	}
         wrinkling << "#" << setw(19) << "image" << setw(20) << "rel. volume" << setw(20) << "L0" << setw(20) << "s1/L0" << setw(20) << "s2/L0" << endl;
         report << "<h1>Elastic Analysis</h1>" << endl;
         
@@ -391,12 +397,18 @@ void Sequence(LaplaceData *reference, double pressure, double poisson, double co
                 sequence 
                 << setw(12) << i 
                 << setw(12) << shape.GetPressure()*surface_tension/length_scale
-                << setw(12) << shape.GetPoisson() 
-                << setw(12) << shape.GetCompression()*surface_tension
-                << setw(12) << error 
+                << setw(12) << shape.GetPoisson();
+		if (CONSTITUTIVE_LAW != 2) {
+			sequence << setw(12) << shape.GetCompression()*surface_tension;
+		}
+                sequence << setw(12) << error 
                 << setw(12) << volume 
-                << setw(12) << area
-                << setw(12) << shape.GetEH0()*surface_tension;
+                << setw(12) << area;
+                if (CONSTITUTIVE_LAW != 2) {
+			sequence << setw(12) << shape.GetEH0()*surface_tension;
+		} else {
+			sequence << setw(12) << shape.GetCompression()*surface_tension;
+		}
                 if (wrinkling_region) {
                         sequence
                         << setw(12) << wrinkle_length*length_scale
@@ -425,19 +437,27 @@ void Sequence(LaplaceData *reference, double pressure, double poisson, double co
                 report << "<img src=\"" << decomposed[decomposed.size()-1] << "\"/></td><td>" << endl;
                 report << "<table>" << endl;
                 report << "<tr><td>pressure at the apex</td><td>" << shape.GetPressure()*surface_tension/length_scale << "N/m^2</td></tr>" << endl;
-                report << "<tr><td>poisson's ratio</td><td>" << shape.GetPoisson() << "</td></tr>" << endl;
-                report << "<tr><td>area compression modulus</td><td>" << shape.GetCompression()*surface_tension << "N/m</td></tr>" << endl;
+		if (CONSTITUTIVE_LAW == 2) {
+			report << "<tr><td>rivlin number</td><td>" << shape.GetPoisson() << "</td></tr>" << endl;
+		} else {
+			report << "<tr><td>poisson's ratio</td><td>" << shape.GetPoisson() << "</td></tr>" << endl;
+			report << "<tr><td>area compression modulus</td><td>" << shape.GetCompression()*surface_tension << "N/m</td></tr>" << endl;
+		}
                 report << "<tr><td>fit error</td><td>" << error << "px</td></tr>" << endl;
                 report << "<tr><td>relative surface</td><td>" << area << "</td></tr>" << endl;
                 report << "<tr><td>relative volume</td><td>" << volume << "</td></tr>" << endl;
-                report << "<tr><td>young's modulus</td><td>" << shape.GetEH0()*surface_tension << "N/m</td></tr>" << endl;
+		if (CONSTITUTIVE_LAW == 2) {
+			report << "<tr><td>rivlin modulus</td><td>" << shape.GetCompression()*surface_tension << "N/m</td></tr>" << endl;
+		} else {
+			report << "<tr><td>young's modulus</td><td>" << shape.GetEH0()*surface_tension << "N/m</td></tr>" << endl;
+		}
                 if (wrinkling_region) {
                         report << "<tr><td>wrinkle length</td><td>" << wrinkle_length*length_scale << "m</td></tr>" << endl;
                         report << "<tr><td>average meridional tension in wrinkled domain</td><td>" << avg_tau*surface_tension << "N/m</td></tr>" << endl;
                         report << "<tr><td>average wrinkle wavelength</td><td>" << lambda*length_scale/reference->GetConversion() << "m</td></tr>" << endl;
                         report << "<tr><td>bending modulus</td><td>" << bending_modulus << "Nm</td></tr>" << endl;
                         report << "<tr><td>f&oumlppl von karman number</td><td>" << shape.GetEH0()*surface_tension*pow(MaximumRadius(&shape)*length_scale, 2)/bending_modulus << "</td></tr>" << endl;
-                        report << "<tr><td>thickness of layer</td><td>" << sqrt(12.0*bending_modulus*(1.0-shape.GetPoisson()*shape.GetPoisson())/(shape.GetEH0()*surface_tension)) << "m</td></tr>" << endl;
+                        report << "<tr><td>thickness of layer</td><td>" << sqrt(12.0*bending_modulus*(1.0-shape.GetPoisson()*shape.GetPoisson())/(shape.GetCompression()*surface_tension)) << "m</td></tr>" << endl;
                         report << "</table></td></table>" << endl;
                 }
         }

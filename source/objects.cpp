@@ -241,6 +241,8 @@ HookeData::HookeData() : Data()
         }
         /* explicit rk containers */
         AllocateData(dim);
+	/* allocate minimizer */
+	min_vec = gsl_vector_alloc(2);
 }
 
 HookeData::~HookeData()
