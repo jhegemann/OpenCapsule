@@ -69,7 +69,7 @@ Ubuntu 16.04 LTS and Scientific Linux 6.6 with GNU/GCC compiler.
 To install OpenCapsule first download the tarball and extract 
 it to some arbitrary direction or simply clone the repository. 
 Before compiling install the required dependencies
-Boost, OpenCV and Gnu Scientific Library (GSL) e.g. 
+Boost, OpenCV and Gnu Scientific Library (GSL), e.g., 
 on Ubuntu typing something like
 
 ```
@@ -77,10 +77,10 @@ sudo apt-get install gcc g++ make libboost-all-dev libopencv-dev libgsl-dev libg
 ```
 
 in a login-shell will be sufficient. On Scientific Linux, 
-i.e. Fedora system, use Yum package manager or install 
+i.e., Fedora system, use Yum package manager or install 
 the libraries manually. OpenCapsule uses OpenCV for image 
 handling and therefore only supports the image formats 
-supported by your specific installation. Check if all PATH 
+supported by your specific installation. Check if all `PATH` 
 variables are set appropriately or adapt the Makefile by 
 informing `g++` explicitly where to find the libraries by 
 using the `-L` option. Finally, simply type
@@ -226,7 +226,7 @@ tension and the inverse capillary diameter. Only
 if the simple call without initial values gives 
 no adequate result, you should provide intitial 
 values for the fit parameters. Note that, when using
-Mooney Rivlin elasticity instead of nonlinear 
+Mooney-Rivlin elasticity instead of nonlinear 
 Hookean elasticity, the `--compression` argument 
 corresponds to the Rivlin modulus and the
 `--poisson` argument corresponds to the dimensionless
@@ -258,7 +258,6 @@ values in SI units and images with shapes overlayed.
 ## License
 OpenCapsule is GPLv3 licensed and thereby 100% 
 Open Source Software. See LICENSE for details.
-Contributions are expressly welcome.
 
 ## Example
 To check if OpenCapsule works on your machine
@@ -544,7 +543,7 @@ the dimensionless shape parameter. This is why the variables `FIT_COMPRESSION`
 and `FIT_POISSON` are related to the corresponding quantities of the Mooney-Rivlin
 elasticity when changing the constitutive law to `CONSTITUTIVE_LAW 2`. 
 Likewise, the command line arguments `--compression` and `--poisson` change 
-their meaning. When performing the shape fitting with Mooney Rivlin elasticity
+their meaning. When performing the shape fitting with Mooney-Rivlin elasticity
 it may occur, that the dimensionless shape parameter becomes `1` and, 
 thus, the fit does not converge properly. In this case, you should employ
 the neo-Hookean model by additionally setting `FIT_POISSON 0` and calling
@@ -562,11 +561,14 @@ Sets pressure as free parameter of the regression.
 ```
 FIT_POISSON 1
 ```
-Sets poisson ratio as free parameter of the regression.
+Sets poisson ratio as free parameter of the regression. When fitting with Mooney-Rivlin
+elasticity, this option sets the corresponding dimensionless shape parameter as free
+parameter of the shape regression.
 ```
 FIT_COMPRESSION 1
 ```
-Sets area compression modulus as free parameter of the regression.
+Sets area compression modulus as free parameter of the regression. When fitting with Mooney-Rivlin
+elasticity, this option sets the corresponding Rivlin modulus as free parameter of the shape regression.
 ```
 EXTENDED_SHOOTING 1
 ```
@@ -598,6 +600,8 @@ Actiates/deactivates use of fit result in next image as initial values.
 WRINKLING_WAVELENGTH 0.0
 ```
 Specifies a manually measured wrinkle wavelength in units of pixels.
+Providing a non-zero value here bypasses the automatic detection of the
+wrinkle wavelength.
 
 ### 6) General directories
 ```
