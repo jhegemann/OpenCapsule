@@ -344,9 +344,9 @@ void Sequence(LaplaceData *reference, double pressure, double poisson, double co
         for (int i = 0; i < _elastic_shape.size(); i++)
         {
                 string filename = GLOBAL_OUT_FOLDER + "elastic_" + to_string<int>(i) + "_shape.dat";
-                udef.SetParameters(pref1, pref2, pref3);
-                SolveLaplace(&udef); 
-                shape.SetLaplace(&udef);
+                /* udef.SetParameters(pref1, pref2, pref3);
+		   SolveLaplace(&udef); */
+                shape.SetLaplace(reference);
                 shape.SetParameters(pdef1, pdef2, pdef3);
                 shape.SetInitialConditions(0.0, 0.0, 0.0, 1.0);
                 bool success = true;
