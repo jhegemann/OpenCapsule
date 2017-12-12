@@ -1377,7 +1377,7 @@ bool ParallelShooting(HookeData *data, int p_interval)
         
         if (dummy.invalid) 
         {
-                cout << "invalid dummy in ParallelShooting.." << flush << endl;
+                //cout << "invalid dummy in ParallelShooting.." << flush << endl;
                 return false;
         }
         
@@ -1750,33 +1750,33 @@ void SolveHooke(HookeData *data, double t_min, double t_max)
                 
                 if (isnan(y[0])) 
                 {
-                        cout << "prev\t" << tmp1 << "\t" << tmp2 << "\t" << tmp3 << "\t" << tmp4 << flush << endl;
-                        cout << "curr\t" << y[0] << "\t" << y[1] << "\t" << y[2] << "\t" << y[3] << flush << endl;
-                        cout << "r is nan" << flush << endl;
+                        //cout << "prev\t" << tmp1 << "\t" << tmp2 << "\t" << tmp3 << "\t" << tmp4 << flush << endl;
+                        //cout << "curr\t" << y[0] << "\t" << y[1] << "\t" << y[2] << "\t" << y[3] << flush << endl;
+                        //cout << "r is nan" << flush << endl;
                         return;
                 }
                 
                 if (isnan(y[1]))
                 {
-                        cout << "prev\t" << tmp1 << "\t" << tmp2 << "\t" << tmp3 << "\t" << tmp4 << flush << endl;
-                        cout << "curr\t" << y[0] << "\t" << y[1] << "\t" << y[2] << "\t" << y[3] << flush << endl;
-                        cout << "z is nan" << flush << endl;
+                        //cout << "prev\t" << tmp1 << "\t" << tmp2 << "\t" << tmp3 << "\t" << tmp4 << flush << endl;
+                        //cout << "curr\t" << y[0] << "\t" << y[1] << "\t" << y[2] << "\t" << y[3] << flush << endl;
+                        //cout << "z is nan" << flush << endl;
                         return;
                 }
                 
                 if (isnan(y[2]))
                 {
-                        cout << "prev\t" << tmp1 << "\t" << tmp2 << "\t" << tmp3 << "\t" << tmp4 << flush << endl;
-                        cout << "curr\t" << y[0] << "\t" << y[1] << "\t" << y[2] << "\t" << y[3] << flush << endl;
-                        cout << "psi is nan" << flush << endl;
+                        //cout << "prev\t" << tmp1 << "\t" << tmp2 << "\t" << tmp3 << "\t" << tmp4 << flush << endl;
+                        //cout << "curr\t" << y[0] << "\t" << y[1] << "\t" << y[2] << "\t" << y[3] << flush << endl;
+                        //cout << "psi is nan" << flush << endl;
                         return;
                 }
                 
                 if (isnan(y[3]))
                 {
-                        cout << "prev\t" << tmp1 << "\t" << tmp2 << "\t" << tmp3 << "\t" << tmp4 << flush << endl;
-                        cout << "curr\t" << y[0] << "\t" << y[1] << "\t" << y[2] << "\t" << y[3] << flush << endl;
-                        cout << "tau_s is nan" << flush << endl;
+                        //cout << "prev\t" << tmp1 << "\t" << tmp2 << "\t" << tmp3 << "\t" << tmp4 << flush << endl;
+                        //cout << "curr\t" << y[0] << "\t" << y[1] << "\t" << y[2] << "\t" << y[3] << flush << endl;
+                        //cout << "tau_s is nan" << flush << endl;
                         return;
                 }
                 
