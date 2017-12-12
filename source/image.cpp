@@ -403,8 +403,8 @@ PointSet *Image::PointCloud(double **image)
                         sym_trans += cloud[(i+1)%cloud.size()].first;
                         keep_checking = false;
                 }
-                /* take only 1/10 of the found points AND points directly at the capillary */
-                if(i % 10 == 0 || dist1 > max_dist || dist2 > max_dist) {
+                /* take only 1/EVERY of the found points AND points directly at the capillary */
+                if(i % EVERY == 0 || dist1 > max_dist || dist2 > max_dist) {
                         sparse_region->push_back(cloud[i]);
                 }
         }

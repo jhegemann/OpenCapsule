@@ -37,6 +37,7 @@ int R_MIN = STD_R_MIN;
 int R_MAX = STD_R_MAX;
 double THRESHOLD_CAPILLARY = STD_THRESHOLD_CAPILLARY;
 int TOP_BUFFER = STD_TOP_BUFFER;
+int EVERY = STD_EVERY;
 bool CHECK_IF_CLOSED = STD_CHECK_IF_CLOSED;
 double EPS_IMPLICIT_RK = STD_EPS_IMPLICIT_RK;
 bool IMPLICIT_INTEGRATION = STD_IMPLICIT_INTEGRATION;
@@ -160,6 +161,7 @@ void parse_configuration()
         if (contains(fs, "R_MAX")) R_MAX = atoi(fs["R_MAX"].c_str()); 
         if (contains(fs, "THRESHOLD_CAPILLARY")) THRESHOLD_CAPILLARY = atof(fs["THRESHOLD_CAPILLARY"].c_str());
         if (contains(fs, "TOP_BUFFER")) TOP_BUFFER = atoi(fs["TOP_BUFFER"].c_str());
+	if (contains(fs, "EVERY")) EVERY = atoi(fs["EVERY"].c_str());
         if (contains(fs, "CHECK_IF_CLOSED")) CHECK_IF_CLOSED = (bool)atoi(fs["CHECK_IF_CLOSED"].c_str());
         if (contains(fs, "EPS_IMPLICIT_RK")) EPS_IMPLICIT_RK = atof(fs["EPS_IMPLICIT_RK"].c_str());
         if (contains(fs, "IMPLICIT_INTGERATION")) IMPLICIT_INTEGRATION = (bool)atoi(fs["IMPLICIT_INTEGRATION"].c_str());

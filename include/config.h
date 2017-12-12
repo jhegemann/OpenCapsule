@@ -47,6 +47,7 @@ using namespace std;
 #define STD_THRESHOLD_CAPILLARY 5
 #define STD_TOP_BUFFER 0
 #define STD_CHECK_IF_CLOSED 1
+#define STD_EVERY 5
 #define STD_IMPLICIT_INTEGRATION 0
 #define STD_EPS_IMPLICIT_RK 1e-10
 #define STD_INPUT_FOLDER "./input/"
@@ -98,6 +99,7 @@ extern int R_MIN;
 extern int R_MAX;
 extern double THRESHOLD_CAPILLARY;
 extern int TOP_BUFFER;
+extern int EVERY;
 extern double EPS_IMPLICIT_RK;
 extern bool IMPLICIT_INTEGRATION;
 extern bool CHECK_IF_CLOSED;
