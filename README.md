@@ -54,6 +54,13 @@ please cite the following articles!
   S. Knoche, D. Vella, E. Aumaitre, P. Degen, H. Rehage, P. Cicuta, and J. Kierfeld  
   Langmuir, Vol. 29, No. 40, Pages 12463--12471, 2013, ACS Publications
 
+## References
+OpenCapsule is frequently being used in several institutions, some of them are listed below.
+
+* L’Institut Charles Sadron 
+* ETH Zurich
+* University of Pittsburgh
+
 ## Support
 
 If you have any problems using OpenCapsule, please do not hesitate to contact us!
