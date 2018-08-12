@@ -55,7 +55,7 @@ please cite the following articles!
   Langmuir, Vol. 29, No. 40, Pages 12463--12471, 2013, ACS Publications
 
 ## References
-OpenCapsule is frequently being used in several institutions, some of them are listed below.
+OpenCapsule is being used in several research institutions. Some of them are listed below.
 
 * TU Dortmund
 * L’Institut Charles Sadron (Strasbourg)
@@ -72,7 +72,7 @@ We expressly welcome contributions to the source code or the documentation!
 ## Installation guide
 
 OpenCapsule was tested (successful compilation and execution) on 
-Ubuntu 16.04 LTS and Scientific Linux 6.6 with GNU/GCC compiler. 
+Ubuntu 18.04 LTS with GNU/GCC compiler. 
 To install OpenCapsule first download the tarball and extract 
 it to some arbitrary direction or simply clone the repository. 
 Before compiling install the required dependencies
