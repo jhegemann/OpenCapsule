@@ -57,6 +57,7 @@ please cite the following articles!
 ## References
 OpenCapsule is frequently being used in several institutions, some of them are listed below.
 
+* TU Dortmund
 * L’Institut Charles Sadron (Strasbourg)
 * ETH Zurich
 * University of Pittsburgh
