@@ -831,7 +831,7 @@ double **Image::CombinedHysteresis(string filename, const bool wrinkles)
         {
                 foto.t_high = 0.10;
                 foto.t_low = 0.05;
-                CHECK_IF_CLOSED = FALSE;
+                CHECK_IF_CLOSED = false;
         }
         
         bool closed = false;
@@ -910,7 +910,7 @@ double **Image::CombinedHysteresis(string filename, const bool wrinkles)
         {
                 foto.t_high = T_HIGH;
                 foto.t_low = T_LOW;
-                CHECK_IF_CLOSED = TRUE;
+                CHECK_IF_CLOSED = true;
         }
         return com;
 }
@@ -1239,7 +1239,7 @@ bool Image::CheckMax0(double **gradient, int x, int y)
 
 int Image::Write(const char* filename, double **i)
 {
-        double g = MaxBrightness(i);
+/*         double g = MaxBrightness(i);
         Mat output(foto.height, foto.width, CV_64FC1);
         for (int x = 0; x < foto.width; x++)
         {
@@ -1249,7 +1249,7 @@ int Image::Write(const char* filename, double **i)
                 }
         }
         imwrite(filename, output);
-        output.release();
+        output.release(); */
         return 0;
 }
 

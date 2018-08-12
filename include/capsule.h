@@ -160,8 +160,7 @@ void ReplaceWorst(vector<Vertex*> *v, Vertex *newone);
 void CalcReflection(vector<Vertex*> *v, Vertex *r, Vertex *c, HookeData *dummy, PointSet *points, double alpha);
 void CalcCentroid(Vertex *c, vector<Vertex*> *v);
 void SortVertices(vector<Vertex*> *v, HookeData *dummy, PointSet *points);
-double Error(Vertex *v, HookeData *dummy, PointSet *points);
-double Error(Data *shape, PointSet *points);
+double NMError(Vertex *v, HookeData *dummy, PointSet *points);
 
 /* Linear algebra */
 void QR(gsl_matrix *A, gsl_vector *x, gsl_vector *b, int M, int N);
@@ -172,7 +171,7 @@ void PrintMatrix(gsl_matrix *x, const char *name);
 double Volume(Data *shape);
 double Area(Data *shape);
 double DistDeriv(Data *shape, double s, double z_i, double r_i);
-double Error(Data *shape, PointSet *points);
+double RMSError(Data *shape, PointSet *points);
 double HookeError(HookeData *shape, PointSet *points);
 Residual Dist(Data *shape, double s, double z_i, double r_i);
 Residual SingleError(Data *shape, pair<double,double> point);

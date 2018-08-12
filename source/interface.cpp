@@ -257,7 +257,7 @@ LaplaceData *LaplaceMean(double pressure, double density, double scaling)
                 << setw(20) << shape[k].GetPressure()*tension/local_inner_capillary_m
                 << setw(20) << shape[k].GetDensity()*tension/pow(local_inner_capillary_m, 2)/9.81
                 << setw(20) << local_inner_capillary_m /* from dimensionless to m */
-                << setw(20) << mean->GetConversion()*Error(&shape[k], _reference_shape[k]) 
+                << setw(20) << mean->GetConversion()*RMSError(&shape[k], _reference_shape[k]) 
                 << setw(20) << tension
                 << endl;
                 string out_image = GLOBAL_OUT_FOLDER + "final_reference_" + to_string<int>(k) + ".png";
@@ -383,7 +383,7 @@ void Sequence(LaplaceData *reference, double pressure, double poisson, double co
                         bending_modulus = pow(lambda*length_scale/reference->GetConversion(), 4)*avg_tau*surface_tension/(16.0*M_PI*M_PI*pow(wrinkle_length*length_scale, 2));
                 }
                 
-                double error = reference->GetConversion()*Error(&shape, _elastic_shape[i]);
+                double error = reference->GetConversion()*RMSError(&shape, _elastic_shape[i]);
                 double volume = Volume(&shape)/V0;
                 double area = Area(&shape)/A0;
                 double eh0 = shape.GetEH0();

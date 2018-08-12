@@ -4,12 +4,12 @@ ID = ./include
 OBJS = $(BD)/main.o $(BD)/image.o $(BD)/capsule.o $(BD)/interface.o $(BD)/objects.o $(BD)/config.o $(BD)/script.o
 CC = g++ -O3
 LINKING_GSL = -lgsl -lgslcblas -lm
-LINKING_OPENCV = -lopencv_core -lopencv_highgui
+LINKING_OPENCV = -lopencv_core -lopencv_highgui -lopencv_imgcodecs -lopencv_features2d -lopencv_imgproc
 LINKING_BOOST = -lboost_system -lboost_filesystem -lboost_program_options
 FLAG_OPENMP = -fopenmp
 
 OpenCapsule:			$(OBJS)
-				$(CC) -Wall -o OpenCapsule $(OBJS) $(FLAG_OPENMP) $(LINKING_OPENCV) $(LINKING_GSL) $(LINKING_BOOST) 
+				$(CC) -Wall -o OpenCapsule $(OBJS) $(FLAG_OPENMP) $(LINKING_BOOST) $(LINKING_OPENCV) $(LINKING_GSL) 
 
 $(BD)/main.o:			$(SD)/main.cpp	
 				$(CC) -c -I$(ID) $(SD)/main.cpp -o $(BD)/main.o

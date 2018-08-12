@@ -2115,7 +2115,7 @@ void LaplaceFit(LaplaceData *data, PointSet *points)
                 /* perform linesearch on update */
                 xi = 0.5;
                 continue_linesearch = true;
-                err_prev = Error(data, points);
+                err_prev = RMSError(data, points);
                 while (continue_linesearch)
                 {
                         data->SetParameters(gsl_vector_get(PI, 0) + gsl_vector_get(D, 0), gsl_vector_get(PI, 1) + gsl_vector_get(D, 1), gsl_vector_get(PI, 2) + gsl_vector_get(D, 2));								
@@ -2123,7 +2123,7 @@ void LaplaceFit(LaplaceData *data, PointSet *points)
                         SolveLaplace(data);
                         if (!data->invalid)
                         {
-                                err_next = Error(data, points);
+                                err_next = RMSError(data, points);
                                 if (err_next < err_prev)
                                 {
                                         continue_linesearch = false;
@@ -2206,7 +2206,7 @@ bool HookeFitIteration(HookeData *data, PointSet *points, bool fit_p, bool fit_n
         
         bool converged = false;
         int it;
-        double err = Error(data, points);
+        double err = RMSError(data, points);
         
         if (WATCH_HOOKE_FITTING)
         {
@@ -2313,7 +2313,7 @@ bool HookeFitIteration(HookeData *data, PointSet *points, bool fit_p, bool fit_n
         double xi = 0.5;
         double err_prev, err_next;
         bool continue_linesearch = true;
-        err_prev = Error(data, points);
+        err_prev = RMSError(data, points);
         gsl_vector_scale(D, 10.0/gsl_blas_dnrm2(D));
         
         while (continue_linesearch)
@@ -2364,7 +2364,7 @@ bool HookeFitIteration(HookeData *data, PointSet *points, bool fit_p, bool fit_n
                         success = SingleShooting(data);
                         if ((!data->invalid) && success)
                         {
-                                err_next = Error(data, points);
+                                err_next = RMSError(data, points);
                                 if (err_next < err_prev)
                                 {
                                         continue_linesearch = false;
@@ -2446,7 +2446,7 @@ void HookeFit(HookeData *data, PointSet *points, const bool fit_p, const bool fi
                 cout << FMT << data->GetPressure();
                 cout << FMT << data->GetPoisson();
                 cout << FMT << data->GetCompression();
-                cout << FMT << data->undeformed->GetConversion() * Error(data, points) << endl;
+                cout << FMT << data->undeformed->GetConversion() * RMSError(data, points) << endl;
                 cout << endl;
         }
 }
@@ -2590,7 +2590,7 @@ void CalcReflection(vector<Vertex*> *v, Vertex *r, Vertex *c, HookeData *dummy, 
         r->p = c->p + alpha * (c->p - worst->p);
         r->nu = c->nu + alpha * (c->nu - worst->nu);
         r->k = c->k + alpha * (c->k - worst->k);
-        r->error = Error(r, dummy, points);
+        r->error = NMError(r, dummy, points);
 }
 
 /* helper method for nelder mead */
@@ -2615,13 +2615,13 @@ void SortVertices(vector<Vertex*> *v, HookeData *dummy, PointSet *points)
         double err;
         for (int i = 0; i < v->size(); i++)
         {
-                (*v)[i]->error = Error((*v)[i], dummy, points);
+                (*v)[i]->error = NMError((*v)[i], dummy, points);
         }
         sort(v->begin(), v->end(), CompareVertices);
 }
 
 /* overloaded for vertex */
-double Error(Vertex *v, HookeData *dummy, PointSet *points)
+double NMError(Vertex *v, HookeData *dummy, PointSet *points)
 {
         dummy->SetParameters(v->p, v->nu, v->k);
         bool success = SingleShooting(dummy);
@@ -2634,7 +2634,7 @@ double Error(Vertex *v, HookeData *dummy, PointSet *points)
                 }
                 else 
                 {
-                        return dummy->undeformed->GetConversion() * Error(dummy, points);
+                        return dummy->undeformed->GetConversion() * RMSError(dummy, points);
                 }
         }
         else
@@ -2710,7 +2710,7 @@ double DistDeriv(Data *shape, double s, double r_i, double z_i)
 }
 
 /* calculate fit error */
-double Error(Data *shape, PointSet *points)
+double RMSError(Data *shape, PointSet *points)
 {
         int size = points->size();
         double rms = 0.0;
